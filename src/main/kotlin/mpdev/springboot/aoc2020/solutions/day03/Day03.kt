@@ -1,37 +1,41 @@
-package mpdev.springboot.aoc2020.solutions.day02
+package mpdev.springboot.aoc2020.solutions.day03
 
 import mpdev.springboot.aoc2020.model.PuzzlePartSolution
 import mpdev.springboot.aoc2020.solutions.PuzzleSolver
 import org.springframework.stereotype.Component
+import java.awt.Point
 import kotlin.system.measureNanoTime
 
 @Component
-class Day02: PuzzleSolver() {
+class Day03: PuzzleSolver() {
 
     final override fun setDay() {
-        day = 2
+        day = 3
     }
 
     init {
         setDay()
     }
 
-    var result = 0
+    var result = 0L
 
     override fun initSolver() {}
 
     override fun solvePart1(): PuzzlePartSolution {
-        val passwordRules = PasswordRules(inputData)
+        val slope = Slope(inputData)
         val elapsed = measureNanoTime {
-            result = passwordRules.countValidPwds1()
+            result = slope.traverse(Point(3,1)).toLong()
         }
         return PuzzlePartSolution(1, result.toString(), elapsed/1000, "micro-sec")
     }
 
     override fun solvePart2(): PuzzlePartSolution {
-        val passwordRules = PasswordRules(inputData)
+        val slope = Slope(inputData)
         val elapsed = measureNanoTime {
-            result = passwordRules.countValidPwds2()
+            val res = mutableListOf<Long>()
+            listOf(Point(1,1), Point(3,1), Point(5,1), Point(7,1), Point(1,2))
+                .forEach { res.add(slope.traverse(it).toLong()) }
+            result = res.fold(1L) { product, it -> product * it }
         }
         return PuzzlePartSolution(2, result.toString(), elapsed/1000, "micro-sec")
     }

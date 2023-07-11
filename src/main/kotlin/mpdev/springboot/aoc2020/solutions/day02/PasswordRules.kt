@@ -7,16 +7,16 @@ class PasswordRules(inputLines: List<String>) {
     private var rules: MutableList<PwdRule> = mutableListOf()
 
     init {
-        inputLines.forEach { line -> rules.add(PwdRule.fromString(line)) }
+        inputLines.forEach { line -> rules.add(PwdRule.from(line)) }
     }
 
     fun countValidPwds1() = rules.count { it.apply1() }
     fun countValidPwds2() = rules.count { it.apply2() }
 }
 
-class PwdRule(var c: Char, var indx1: Int, var indx2: Int,var password: CharArray) {
+class PwdRule(private var c: Char, private var indx1: Int, private var indx2: Int, private var password: CharArray) {
     companion object {
-        fun fromString(input: String): PwdRule {
+        fun from(input: String): PwdRule {
             val match = Regex("""(\d+)-(\d+) ([a-zA-Z]+): (.+)""").find(input)
             try {
                 val (min, max, c, p) = match!!.destructured

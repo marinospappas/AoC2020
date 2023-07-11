@@ -11,5 +11,6 @@ data class PuzzleSolution(
 data class PuzzlePartSolution(
     @JsonProperty("Part") var part: Int = 0,
     @JsonProperty("Result") var result: String = "",
-    @JsonProperty("Elapsed Time (msec)") var elapsedTime: Long = 0
+    @JsonProperty("Elapsed Time") var elapsedTime: Long = 0,
+    @JsonProperty("Time Unit") var timeUnit: String = "milli-sec"
 )
