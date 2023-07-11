@@ -24,6 +24,8 @@ class PassportDb(input: List<String>) {
             if (line.isNotEmpty())
                 inputStr = if (inputStr.isEmpty()) line else "$inputStr $line"
             else  {
+                println(inputStr)
+                println(inputStr.toJson())
                 data.add(objectMapper.readValue(inputStr.toJson(), Passport::class.java))
                 inputStr = ""
             }
@@ -33,7 +35,13 @@ class PassportDb(input: List<String>) {
 
     private fun String.toJson() = "{ \""+ replace(" ", "\", \"").replace(":", "\":\"") + "\" }"
 
+    // heightValidator is instantiated explicitly here as custom constraint would not run...
+    val heightValidator = HeightValidator()
+
     fun validatePassport(passport: Passport, validationGroup: Class<*>): Set<ConstraintViolation<Passport?>> {
+        // hack to trigger the invalid height exception
+        if (!heightValidator.isValid(passport.height, null))
+            passport.invalidHeight = "INVALID"
         val validationResult = passportValidator.validate(passport, validationGroup)
         validationResult.forEach { error -> log.info("passport {} ERROR {} [{}]", passport.passportID, error.message, error.invalidValue) }
         return validationResult

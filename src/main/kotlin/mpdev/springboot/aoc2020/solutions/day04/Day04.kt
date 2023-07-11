@@ -4,7 +4,7 @@ import mpdev.springboot.aoc2020.model.PuzzlePartSolution
 import mpdev.springboot.aoc2020.solutions.PuzzleSolver
 import mpdev.springboot.aoc2020.solutions.day04.ValidationGroups.*
 import org.springframework.stereotype.Component
-import kotlin.system.measureNanoTime
+import kotlin.system.measureTimeMillis
 
 @Component
 class Day04: PuzzleSolver() {
@@ -23,18 +23,18 @@ class Day04: PuzzleSolver() {
 
     override fun solvePart1(): PuzzlePartSolution {
         val passportDb = PassportDb(inputData)
-        val elapsed = measureNanoTime {
+        val elapsed = measureTimeMillis {
             result = passportDb.data.count { passport -> passportDb.validatePassport(passport, Part1::class.java).isEmpty()  }
         }
-        return PuzzlePartSolution(1, result.toString(), elapsed/1000, "micro-sec")
+        return PuzzlePartSolution(1, result.toString(), elapsed)
     }
 
     override fun solvePart2(): PuzzlePartSolution {
         val passportDb = PassportDb(inputData)
-        val elapsed = measureNanoTime {
+        val elapsed = measureTimeMillis {
             result = passportDb.data.count { passport -> passportDb.validatePassport(passport, Part2::class.java).isEmpty()  }
         }
-        return PuzzlePartSolution(2, result.toString(), elapsed/1000, "micro-sec")
+        return PuzzlePartSolution(2, result.toString(), elapsed)
     }
 
 }

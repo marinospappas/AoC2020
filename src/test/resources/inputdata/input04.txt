@@ -7,7 +7,7 @@ hcl:#cfa07d byr:1929
 hcl:#ae17e1 iyr:2013
 eyr:2024
 ecl:brn pid:760753108 byr:1921
-hgt:179cmx
+hgt:179cm
 
 hcl:#cfa07d eyr:2025 pid:166559648
-iyr:2011 ecl:brn hgt:519in
+iyr:2011 ecl:brn hgt:59in
