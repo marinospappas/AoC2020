@@ -1,8 +1,11 @@
 package mpdev.springboot.aoc2020.solutions.day04
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import jakarta.validation.constraints.Max
+import jakarta.validation.constraints.Min
+import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.Pattern
 import mpdev.springboot.aoc2020.solutions.day04.ValidationGroups.*
-import javax.validation.constraints.*
 
 data class Passport(
     @JsonProperty("byr")
@@ -26,8 +29,7 @@ data class Passport(
     @JsonProperty("hgt")
     @field:NotBlank(message = "EX103: Height cannot be empty", groups = [Part1::class, Part2::class])
     @field:Pattern(regexp = """\d+cm|\d+in""", message = "EX207: Height must be a number followed by one of: cm in", groups = [Part2::class])
-    //TODO: Conditional validator needs to be looked into and fixed
-    //@field:ValidHeight(message = "EN999: Height must be between 150 and 193cm (59-76in) or above", groups = [Part2::class])
+    @field:ValidHeight(message = "EX209: Height must be between 150 and 193cm (59-76in) or above", groups = [Part2::class])
     var height: String? = null,
 
     @JsonProperty("hcl")
@@ -48,8 +50,3 @@ data class Passport(
     @JsonProperty("cid")
     val countryID: String? = null
 )
-{
-    //TODO: This is workaround to conditionally validate the height until the conditional validator is fixed
-    @Pattern(regexp = """^(?!INVALID)""", message = "EX209: Height must be between 150 and 193cm (59-76in) or above", groups = [Part2::class])
-    var invalidHeight: String? = null
-}

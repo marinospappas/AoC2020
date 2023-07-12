@@ -1,11 +1,11 @@
 package mpdev.springboot.aoc2020.solutions.day04
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import jakarta.validation.ConstraintViolation
+import jakarta.validation.Validation.buildDefaultValidatorFactory
+import jakarta.validation.Validator
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import javax.validation.ConstraintViolation
-import javax.validation.Validation.buildDefaultValidatorFactory
-import javax.validation.Validator
 
 class PassportDb(input: List<String>) {
 
@@ -24,26 +24,25 @@ class PassportDb(input: List<String>) {
             if (line.isNotEmpty())
                 inputStr = if (inputStr.isEmpty()) line else "$inputStr $line"
             else  {
-                println(inputStr)
-                println(inputStr.toJson())
                 data.add(objectMapper.readValue(inputStr.toJson(), Passport::class.java))
                 inputStr = ""
             }
         }
         data.add(objectMapper.readValue(inputStr.toJson(), Passport::class.java))
+        log.info("passport DB size: {}", data.size)
     }
 
     private fun String.toJson() = "{ \""+ replace(" ", "\", \"").replace(":", "\":\"") + "\" }"
 
-    // heightValidator is instantiated explicitly here as custom constraint would not run...
-    val heightValidator = HeightValidator()
-
     fun validatePassport(passport: Passport, validationGroup: Class<*>): Set<ConstraintViolation<Passport?>> {
-        // hack to trigger the invalid height exception
-        if (!heightValidator.isValid(passport.height, null))
-            passport.invalidHeight = "INVALID"
         val validationResult = passportValidator.validate(passport, validationGroup)
         validationResult.forEach { error -> log.info("passport {} ERROR {} [{}]", passport.passportID, error.message, error.invalidValue) }
         return validationResult
     }
+}
+
+// validation groups for part 1 and part 2 respectively
+class ValidationGroups {
+    interface Part1
+    interface Part2
 }
