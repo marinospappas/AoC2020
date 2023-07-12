@@ -19,7 +19,7 @@ class Day05: PuzzleSolver() {
     var result = 0
     lateinit var seatData: Set<Int>
 
-    override fun initSolver(): Pair<Int,String> {
+    override fun initSolver(): Pair<Long,String> {
         val elapsed = measureNanoTime {
             seatData = inputData
                 // the input is actually a binary number: F = 0, B = 1, L = 0, R = 1
@@ -32,7 +32,7 @@ class Day05: PuzzleSolver() {
                 .reversed()
                 .toSet()
         }
-        return Pair((elapsed/1000).toInt(), "micro-sec")
+        return Pair(elapsed/1000, "micro-sec")
     }
 
     override fun solvePart1(): PuzzlePartSolution {

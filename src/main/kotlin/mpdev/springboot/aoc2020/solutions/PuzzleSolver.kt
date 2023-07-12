@@ -30,7 +30,7 @@ abstract class PuzzleSolver {
     }
 
     abstract fun setDay()
-    abstract fun initSolver(): Pair<Int,String>
+    abstract fun initSolver(): Pair<Long,String>
     abstract fun solvePart1(): PuzzlePartSolution
     abstract fun solvePart2(): PuzzlePartSolution
 

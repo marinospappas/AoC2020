@@ -20,11 +20,11 @@ class Day04: PuzzleSolver() {
     var result = 0
     lateinit var passportDb: PassportDb
 
-    override fun initSolver(): Pair<Int,String> {
+    override fun initSolver(): Pair<Long,String> {
         val elapsed = measureTimeMillis {
             passportDb = PassportDb(inputData)
         }
-        return Pair(elapsed.toInt(), "milli-sec")
+        return Pair(elapsed, "milli-sec")
     }
 
     override fun solvePart1(): PuzzlePartSolution {

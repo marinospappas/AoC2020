@@ -19,11 +19,11 @@ class Day01: PuzzleSolver() {
     var result = 0
     lateinit var intList: List<Int>
 
-    override fun initSolver(): Pair<Int,String> {
+    override fun initSolver(): Pair<Long,String> {
         val elapsed = measureNanoTime {
             intList = inputData.map { Integer.parseInt(it) }
         }
-        return Pair((elapsed/1000).toInt(), "micro-sec")
+        return Pair(elapsed/1000, "micro-sec")
     }
 
     override fun solvePart1(): PuzzlePartSolution {

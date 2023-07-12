@@ -19,11 +19,11 @@ class Day02: PuzzleSolver() {
     var result = 0
     lateinit var passwordRules: PasswordRules
 
-    override fun initSolver(): Pair<Int,String> {
+    override fun initSolver(): Pair<Long,String> {
         val elapsed = measureNanoTime {
             passwordRules = PasswordRules(inputData)
         }
-        return Pair((elapsed/1000).toInt(), "micro-sec")
+        return Pair(elapsed/1000, "micro-sec")
     }
 
     override fun solvePart1(): PuzzlePartSolution {

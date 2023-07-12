@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 data class PuzzleSolution(
     @JsonProperty("Message")  var message: String = "Advent of Code 2020",
     @JsonProperty("Day")  var day: Int,
-    @JsonProperty("initialisation Time")  var initTime: Int = 0,
+    @JsonProperty("initialisation Time")  var initTime: Long = 0,
     @JsonProperty("Time Unit") var initTimeUnit: String = "milli-sec",
     @JsonProperty("Solution")  var solution: Set<PuzzlePartSolution>
 )
