@@ -18,11 +18,16 @@ class Day03: PuzzleSolver() {
     }
 
     var result = 0L
+    lateinit var slope: Slope
 
-    override fun initSolver() {}
+    override fun initSolver(): Pair<Int,String> {
+        val elapsed = measureNanoTime {
+            slope = Slope(inputData)
+        }
+        return Pair((elapsed/1000).toInt(), "micro-sec")
+    }
 
     override fun solvePart1(): PuzzlePartSolution {
-        val slope = Slope(inputData)
         val elapsed = measureNanoTime {
             result = slope.traverse(Point(3,1)).toLong()
         }
@@ -30,7 +35,6 @@ class Day03: PuzzleSolver() {
     }
 
     override fun solvePart2(): PuzzlePartSolution {
-        val slope = Slope(inputData)
         val elapsed = measureNanoTime {
             val res = mutableListOf<Long>()
             listOf(Point(1,1), Point(3,1), Point(5,1), Point(7,1), Point(1,2))

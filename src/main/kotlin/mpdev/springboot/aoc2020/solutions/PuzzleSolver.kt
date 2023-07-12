@@ -21,15 +21,16 @@ abstract class PuzzleSolver {
     fun solve(): PuzzleSolution {
         log.info("solver for day {} called", day)
         inputData = inputDataReader.read(day)
-        initSolver()
+        val initTime = initSolver()
         val part1 = solvePart1()
         val part2 = solvePart2()
         log.info("day {} part 1 answer: {} part 2 answer: {}", day, part1.result, part2.result)
-        return PuzzleSolution(day = day, solution = setOf(part1, part2))
+        return PuzzleSolution(day = day, initTime = initTime.first, initTimeUnit = initTime.second,
+            solution = setOf(part1, part2))
     }
 
     abstract fun setDay()
-    abstract fun initSolver()
+    abstract fun initSolver(): Pair<Int,String>
     abstract fun solvePart1(): PuzzlePartSolution
     abstract fun solvePart2(): PuzzlePartSolution
 

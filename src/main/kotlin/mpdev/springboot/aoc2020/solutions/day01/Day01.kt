@@ -17,12 +17,17 @@ class Day01: PuzzleSolver() {
     }
 
     var result = 0
+    lateinit var intList: List<Int>
 
-    override fun initSolver() {}
+    override fun initSolver(): Pair<Int,String> {
+        val elapsed = measureNanoTime {
+            intList = inputData.map { Integer.parseInt(it) }
+        }
+        return Pair((elapsed/1000).toInt(), "micro-sec")
+    }
 
     override fun solvePart1(): PuzzlePartSolution {
         val elapsed = measureNanoTime {
-            val intList = inputData.map { Integer.parseInt(it) }
             val res = find2ComponentsForSum(intList, 2020)
             result = res.first * res.second
         }
@@ -31,7 +36,6 @@ class Day01: PuzzleSolver() {
 
     override fun solvePart2(): PuzzlePartSolution {
         val elapsed = measureNanoTime {
-            val intList = inputData.map { Integer.parseInt(it) }
             for (i in intList) {
                 val res = find2ComponentsForSum(intList, 2020-i)
                 if (res.first >= 0) {

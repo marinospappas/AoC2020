@@ -17,11 +17,16 @@ class Day02: PuzzleSolver() {
     }
 
     var result = 0
+    lateinit var passwordRules: PasswordRules
 
-    override fun initSolver() {}
+    override fun initSolver(): Pair<Int,String> {
+        val elapsed = measureNanoTime {
+            passwordRules = PasswordRules(inputData)
+        }
+        return Pair((elapsed/1000).toInt(), "micro-sec")
+    }
 
     override fun solvePart1(): PuzzlePartSolution {
-        val passwordRules = PasswordRules(inputData)
         val elapsed = measureNanoTime {
             result = passwordRules.countValidPwds1()
         }
@@ -29,7 +34,6 @@ class Day02: PuzzleSolver() {
     }
 
     override fun solvePart2(): PuzzlePartSolution {
-        val passwordRules = PasswordRules(inputData)
         val elapsed = measureNanoTime {
             result = passwordRules.countValidPwds2()
         }

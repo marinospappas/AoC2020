@@ -161,6 +161,7 @@ class Day04Test {
         inputList.add("")
         inputList.addAll(invalidPassports())
         puzzleSolver.inputData = inputList
+        puzzleSolver.initSolver()
         assertThat(puzzleSolver.solvePart2().result).isEqualTo("6")
     }
 

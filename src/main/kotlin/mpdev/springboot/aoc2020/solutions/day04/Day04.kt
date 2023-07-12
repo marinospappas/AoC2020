@@ -18,11 +18,16 @@ class Day04: PuzzleSolver() {
     }
 
     var result = 0
+    lateinit var passportDb: PassportDb
 
-    override fun initSolver() {}
+    override fun initSolver(): Pair<Int,String> {
+        val elapsed = measureTimeMillis {
+            passportDb = PassportDb(inputData)
+        }
+        return Pair(elapsed.toInt(), "milli-sec")
+    }
 
     override fun solvePart1(): PuzzlePartSolution {
-        val passportDb = PassportDb(inputData)
         val elapsed = measureTimeMillis {
             result = passportDb.data.count { passport -> passportDb.validatePassport(passport, Part1::class.java).isEmpty()  }
         }
@@ -30,7 +35,6 @@ class Day04: PuzzleSolver() {
     }
 
     override fun solvePart2(): PuzzlePartSolution {
-        val passportDb = PassportDb(inputData)
         val elapsed = measureTimeMillis {
             result = passportDb.data.count { passport -> passportDb.validatePassport(passport, Part2::class.java).isEmpty()  }
         }
