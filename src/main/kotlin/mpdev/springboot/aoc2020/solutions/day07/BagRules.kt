@@ -47,7 +47,7 @@ class BagRules(input: List<String>) {
         return discovered - setOf(rootKey, id)
     }
 
-    /* BFS version needs debugging (passes unit tests but failing the problem
+    /* BFS version needs debugging (passes unit tests but failing the problem)
     fun getBagContents(id: BagKey): List<Pair<Int,BagKey>> {  // BFS version
         val result = mutableListOf<Pair<Int,BagKey>>()
         val queue = ArrayDeque<Pair<Int,BagKey>>()
