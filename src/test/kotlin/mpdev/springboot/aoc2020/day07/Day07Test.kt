@@ -38,7 +38,7 @@ class Day07Test {
     fun `Reads Input and Sets up Bag Rules correctly`() {
         val bagRules = BagRules(inputLines)
         bagRules.printRules()
-        assertThat(bagRules.rulesListTxt.size).isEqualTo(10)
+        assertThat(bagRules.rulesList.size).isEqualTo(10)
     }
     @Test
     @Order(3)
@@ -65,7 +65,7 @@ class Day07Test {
         val bagRules = BagRules(inputLines)
         val contents = bagRules.getBagContents(BagKey("shiny gold".mapFromDictionary()))
         println(contents)
-        assertThat(contents.size-1).isEqualTo(6)
+        assertThat(contents.filter { it.second != BagKey("shiny gold".mapFromDictionary()) }.size).isEqualTo(6)
         assertThat(contents.filter { it.second == BagKey("dark olive".mapFromDictionary()) }.size).isEqualTo(1)
         assertThat(contents.filter { it.second == BagKey("vibrant plum".mapFromDictionary()) }.size).isEqualTo(1)
         assertThat(contents.filter { it.second == BagKey("dotted black".mapFromDictionary()) }.size).isEqualTo(2)
@@ -79,7 +79,7 @@ class Day07Test {
         val bagRules = BagRules(input2())
         val contents = bagRules.getBagContents(BagKey("shiny gold".mapFromDictionary()))
         println(contents)
-        assertThat(contents.size-1).isEqualTo(6)
+        assertThat(contents.filter { it.second != BagKey("shiny gold".mapFromDictionary()) }.size).isEqualTo(6)
         assertThat(contents.filter { it.second != BagKey("shiny gold".mapFromDictionary()) }.sumOf { it.first }).isEqualTo(126)
     }
 
