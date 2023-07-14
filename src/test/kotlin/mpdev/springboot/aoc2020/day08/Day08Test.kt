@@ -3,6 +3,8 @@ package mpdev.springboot.aoc2020.day08
 import mpdev.springboot.aoc2020.input.InputDataReader
 import mpdev.springboot.aoc2020.solutions.day08.Day08
 import mpdev.springboot.aoc2020.solutions.day08.GameConsole
+import mpdev.springboot.aoc2020.solutions.day08.GameConsole.Companion.CODE_ERROR
+import mpdev.springboot.aoc2020.solutions.day08.GameConsole.Companion.CODE_SUCCESS
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Order
@@ -44,7 +46,7 @@ class Day08Test {
         val gameConsole = GameConsole(inputLines)
         val exitCode = gameConsole.runBootProg()
         println("Acc: ${gameConsole.getAcc()}")
-        assertThat(exitCode).isEqualTo(-1)
+        assertThat(exitCode).isEqualTo(CODE_ERROR)
         assertThat(gameConsole.getAcc()).isEqualTo(5)
         assertThat(gameConsole.getPc()).isEqualTo(1)
     }
@@ -61,7 +63,7 @@ class Day08Test {
         val gameConsole = GameConsole(inputLines)
         val exitCode = gameConsole.repairBoorProg()
         println("Acc: ${gameConsole.getAcc()}")
-        assertThat(exitCode).isEqualTo(0)
+        assertThat(exitCode).isEqualTo(CODE_SUCCESS)
         assertThat(gameConsole.getAcc()).isEqualTo(8)
         assertThat(gameConsole.getPc()).isEqualTo(9)
     }

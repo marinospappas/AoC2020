@@ -4,8 +4,13 @@ import mpdev.springboot.aoc2020.utils.AocException
 
 class GameConsole(val input: List<String>) {
 
+    companion object {
+        const val CODE_SUCCESS = 0
+        const val CODE_ERROR = -1
+    }
+
     var bootProgram: List<Pair<OpCode,Int>>
-    var registers: Registers = Registers()
+    private var registers: Registers = Registers()
 
     init {
        bootProgram = input.map { processInputLine(it) }
@@ -18,25 +23,25 @@ class GameConsole(val input: List<String>) {
             val (operation, argument) = program[registers.PC]
             registers = operation.execute(registers, argument)
             if (pcValues.contains(registers.PC))     // stop when a loop is detected
-                return -1       // error exit code
+                return CODE_ERROR       // error exit code
             pcValues.add(registers.PC)
-            if (registers.PC >= program.size)
-                return 0        // success exit code
+            if (registers.PC >= program.size)       // end of program
+                return CODE_SUCCESS        // success exit code
         }
     }
 
     fun repairBoorProg(): Int {
-        var exitCode = -1
+        var exitCode = CODE_ERROR
         for (i in bootProgram.indices) {
             if (bootProgram[i].first == OpCode.ACC)
                 continue
             val program = bootProgram.toMutableList()
             val op = program[i]
             program[i] = if (op.first == OpCode.NOP) Pair(OpCode.JMP, op.second)
-            else Pair(OpCode.NOP, op.second)
+                        else Pair(OpCode.NOP, op.second)
             exitCode = runBootProg(program)
-            if (exitCode == 0)
-                return exitCode
+            if (exitCode == CODE_SUCCESS)
+                return CODE_SUCCESS
         }
         return exitCode
     }

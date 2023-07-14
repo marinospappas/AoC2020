@@ -3,7 +3,6 @@ package mpdev.springboot.aoc2020.solutions.day08
 import mpdev.springboot.aoc2020.model.PuzzlePartSolution
 import mpdev.springboot.aoc2020.solutions.PuzzleSolver
 import org.springframework.stereotype.Component
-import kotlin.system.measureNanoTime
 import kotlin.system.measureTimeMillis
 
 @Component
@@ -29,19 +28,19 @@ class Day08: PuzzleSolver() {
     }
 
     override fun solvePart1(): PuzzlePartSolution {
-        val elapsed = measureNanoTime {
+        val elapsed = measureTimeMillis {
             gameConsole.runBootProg()
             result = gameConsole.getAcc()
         }
-        return PuzzlePartSolution(1, result.toString(), elapsed/1000, "micro-sec")
+        return PuzzlePartSolution(1, result.toString(), elapsed)
     }
 
     override fun solvePart2(): PuzzlePartSolution {
-        val elapsed = measureNanoTime {
+        val elapsed = measureTimeMillis {
             gameConsole.repairBoorProg()
             result = gameConsole.getAcc()
         }
-        return PuzzlePartSolution(2, result.toString(), elapsed/1000, "micro-sec")
+        return PuzzlePartSolution(2, result.toString(), elapsed)
     }
 
 }

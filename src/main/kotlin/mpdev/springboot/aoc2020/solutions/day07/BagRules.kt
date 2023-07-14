@@ -81,7 +81,7 @@ class BagRules(input: List<String>) {
     }
 
     private fun processInputLine(line: String) {
-        val match = Regex("""(.+) bags contain (.+).""").find(line)
+        val match = Regex("""([a-z ]+) bags contain (.+).""").find(line)
         try {
             val (key, contents) = match!!.destructured
             rulesList[BagKey(key.mapFromDictionary())] = processRuleItems(contents)

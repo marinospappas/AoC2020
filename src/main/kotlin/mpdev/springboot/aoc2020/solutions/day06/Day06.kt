@@ -36,9 +36,8 @@ class Day06: PuzzleSolver() {
 
     override fun solvePart2(): PuzzlePartSolution {
         val elapsed = measureNanoTime {
-            val initialSet = mutableSetOf<Char>().also { set -> ('a'..'z').forEach { char -> set.add(char) } }
             result = data.sumOf {
-                it.fold(initialSet) { acc: Set<Char>, chars -> acc intersect chars.toSet() }.size
+                it.fold(('a'..'z').toSet()) { acc, chars -> acc intersect chars.toSet() }.size
             }
         }
         return PuzzlePartSolution(2, result.toString(), elapsed/1000, "micro-sec")
