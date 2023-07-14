@@ -34,7 +34,7 @@ class Day08Test {
 
     @Test
     @Order(2)
-    fun `Reads Input and Sets up Bag Rules correctly`() {
+    fun `Reads Input and Sets up Boot Program correctly`() {
         val gameConsole = GameConsole(inputLines)
         gameConsole.bootProgram.forEach { println("${it.first.name} ${it.second}") }
         assertThat(gameConsole.bootProgram.size).isEqualTo(9)

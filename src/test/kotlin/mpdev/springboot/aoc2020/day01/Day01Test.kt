@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test
 class Day01Test {
 
     private val day = 1                                     ///////// Update this for a new dayN test
-    private val puzzleSolver = Day01()                        ///////// Update this for a new dayN test
+    private val puzzleSolver = Day01()                      ///////// Update this for a new dayN test
     private val inputDataReader = InputDataReader("src/test/resources/inputdata/input")
     private var inputLines: List<String> = inputDataReader.read(day)
 
