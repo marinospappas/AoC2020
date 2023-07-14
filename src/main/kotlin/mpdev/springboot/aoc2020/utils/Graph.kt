@@ -7,7 +7,8 @@ class Graph<T>(var getConnections: (id: T) -> List<GraphNode<T>>? = { null } ) {
     val costs = mutableMapOf<Pair<T,T>,Int>()
     val heuristics = mutableMapOf<T,Int>()
 
-    operator fun get(id: T) = nodes[id] ?: throw IllegalArgumentException()
+    operator fun get(id: T) = nodes[id] ?:
+        throw AocException("node id [${id}] not found")
 
     fun addNode(id: T) {
         nodes[id] = GraphNode(id) { nodeId -> getConnections(nodeId) }
@@ -32,6 +33,8 @@ class Graph<T>(var getConnections: (id: T) -> List<GraphNode<T>>? = { null } ) {
     fun updateCost(fromId: T, toId: T, cost: Int) {
         costs[Pair(fromId,toId)] = cost
     }
+
+    fun getNodes() = nodes
 
     private fun getNeighbours(id: T) = nodes[id]?.getConnectedNodes()
 

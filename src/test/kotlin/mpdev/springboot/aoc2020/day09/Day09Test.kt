@@ -33,9 +33,9 @@ class Day09Test {
     @Test
     @Order(2)
     fun `Reads Input and Sets up Sequence correctly`() {
-        inputLines.forEach { println(it) }
-        assertThat(inputLines.size).isEqualTo(20)
-        assertTrue(inputLines.all { it.toInt() > 0 })
+        puzzleSolver.data.forEach { println(it) }
+        assertThat(puzzleSolver.data.size).isEqualTo(20)
+        assertTrue(puzzleSolver.data.all { it > 0 })
     }
 
     @Test

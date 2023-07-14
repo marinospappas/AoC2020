@@ -34,7 +34,7 @@ class Dijkstra<T>(private var costMap: Map<Pair<T,T>,Int>? = null) {
      * start: Vertex, end: Vertex
      */
     fun runIt(startState: Vertex<T>, endState: Vertex<T>, maxPath: Int = Int.MAX_VALUE) =
-        runIt(startState, { currentNode.node?.getId() == endState.getId() }, maxPath )
+        runIt(startState, { id -> id == endState.getId() }, maxPath )
 
     /**
      * The Dijkstra algorithm implementation
