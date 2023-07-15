@@ -81,4 +81,17 @@ class Bfs<T> {
             }
         }
     }
+
+    /**
+     * convert graph to String starting at node start
+     */
+    fun graphToString(graph: Graph<T>, start: Vertex<T>): String {
+        return StringBuilder().also { s ->
+            traverseGraph(start) { id ->
+                s.append("node: $id, connects to:")
+                    .also { s.append(graph[id].getConnectedNodes().map { n -> n.getId() }) }
+                    .also { s.append("\n") }
+            }
+        }.toString()
+    }
 }

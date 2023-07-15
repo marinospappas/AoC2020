@@ -16,7 +16,7 @@ class Day10: PuzzleSolver() {
         setDay()
     }
 
-    var result = 0
+    var result = 0L
     lateinit var data: List<Int>
 
     override fun initSolver(): Pair<Long,String> {
@@ -28,8 +28,8 @@ class Day10: PuzzleSolver() {
 
     override fun solvePart1(): PuzzlePartSolution {
         val elapsed = measureTimeMillis {
-            var countDiff1 = 0
-            var countDiff3 = 0
+            var countDiff1 = 0L
+            var countDiff3 = 0L
             for (i in (0 .. data.size-2)) {
                 when (data[i+1] - data[i]) {
                     3 -> ++countDiff3
@@ -43,8 +43,8 @@ class Day10: PuzzleSolver() {
 
     override fun solvePart2(): PuzzlePartSolution {
         val elapsed = measureTimeMillis {
-            val jolt = JoltAdapters(inputData)
-            result = jolt.getAllPaths(0,jolt.data.max()+3).size
+            val adapters = JoltAdapters(inputData)
+            result = adapters.getAllCombinations()
         }
         return PuzzlePartSolution(2, result.toString(), elapsed)
     }
