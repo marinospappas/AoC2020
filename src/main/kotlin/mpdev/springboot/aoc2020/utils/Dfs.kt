@@ -17,6 +17,31 @@ class Dfs<T> {
      */
 
     /**
+     * returns all paths from a to b
+     */
+    fun allPaths(a: Vertex<T>, b: Vertex<T>): List<List<Vertex<T>>> {
+        val allPaths = mutableListOf<List<Vertex<T>>>()
+        var curPath = mutableListOf<Vertex<T>>().also { it.add(a) }
+        val visited = mutableListOf<List<Vertex<T>>>()
+        val stack = Stack<MutableList<Vertex<T>>>().also { it.push(curPath) }
+        while (stack.isNotEmpty()) {
+            curPath = stack.pop()
+            val lastNode = curPath.last()
+            if (!visited.contains(curPath)) {
+                visited.add(curPath)
+                if (lastNode.getId() == b.getId())   // found path
+                    allPaths.add(curPath)
+                else
+                    lastNode.getConnectedNodes().forEach { connectedNode ->
+                        val newPartialPath = curPath.toMutableList().also { it.add(connectedNode) }
+                        stack.push(newPartialPath)
+                    }
+            }
+        }
+        return allPaths
+    }
+
+    /**
      * traverses the graph and executes function f(T) for every node
      */
     fun traverseGraph(start: Vertex<T>, f: (T) -> Unit = {}) {
@@ -32,5 +57,18 @@ class Dfs<T> {
                 }
             }
         }
+    }
+
+    /**
+     * convert graph to String starting at node start
+     */
+    fun graphToString(graph: Graph<T>, start: Vertex<T>): String {
+        return StringBuilder().also { s ->
+            traverseGraph(start) { id ->
+                s.append("node: $id, connects to:")
+                    .also { s.append(graph[id].getConnectedNodes().map { n -> n.getId() }) }
+                    .also { s.append("\n") }
+            }
+        }.toString()
     }
 }
