@@ -6,7 +6,7 @@ import mpdev.springboot.aoc2020.utils.Graph
 class JoltAdapters(input: List<String>) {
 
     var data: List<Int>
-    var graph: Graph<Int>
+    private var graph: Graph<Int>
     private val bfs = Bfs<Int>()
 
     init {
@@ -35,7 +35,7 @@ class JoltAdapters(input: List<String>) {
                     i2 = i
                     break
                 }
-            pathsCountList.add(bfs.allPaths(graph[data[i1]], graph[data[i2]]).count())
+            pathsCountList.add(getAllPaths(data[i1], data[i2]).count())
             i1 = i2 + 1
         }
         return pathsCountList.fold(1L) { acc, i -> acc * i }
