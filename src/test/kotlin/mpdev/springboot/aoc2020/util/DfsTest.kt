@@ -1,7 +1,5 @@
-package mpdev.springboot.aoc2020.util
+package mpdev.springboot.aoc2020.utils
 
-import mpdev.springboot.aoc2020.utils.Dfs
-import mpdev.springboot.aoc2020.utils.Graph
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 

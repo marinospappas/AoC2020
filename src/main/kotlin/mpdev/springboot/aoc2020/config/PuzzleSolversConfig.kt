@@ -12,9 +12,5 @@ class PuzzleSolversConfig {
     lateinit var puzzleSolversList: List<PuzzleSolver>
 
     @Bean
-    fun puzzleSolvers(): Map<Int,PuzzleSolver> {
-        val solvers = mutableMapOf<Int,PuzzleSolver>()
-        puzzleSolversList.forEach { puzzleSolver -> solvers[puzzleSolver.day] = puzzleSolver }
-        return solvers
-    }
+    fun puzzleSolvers(): Map<Int,PuzzleSolver>  = puzzleSolversList.associateBy { solver -> solver.day }
 }
