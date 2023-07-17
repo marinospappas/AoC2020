@@ -37,18 +37,7 @@ class Day11: PuzzleSolver() {
 
     override fun solvePart1(): PuzzlePartSolution {
         val elapsed = measureTimeMillis {
-            var prevSeating = mapOf<Point,Seat>()
-            for (i in (1..MAX_LOOP)) {
-                if (i == MAX_LOOP)
-                    throw AocException("reached max iteration limit")
-                seatplan.adjustSeating({ s, p -> seatplan.getAdjacentOccupiedPart1(s, p) }, MIN_OCCUPIED_P1)
-                if (seatplan.grid.getData() == prevSeating) {
-                    result = seatplan.countOf(Seat.OCCUPIED)
-                    log.info("number of iterations: $i")
-                    break
-                }
-                prevSeating = seatplan.grid.getData()
-            }
+            result = adjustSeating({ s, p -> seatplan.getAdjacentOccupiedPart1(s, p) }, MIN_OCCUPIED_P1)
         }
         return PuzzlePartSolution(1, result.toString(), elapsed)
     }
@@ -56,20 +45,21 @@ class Day11: PuzzleSolver() {
     override fun solvePart2(): PuzzlePartSolution {
         val elapsed = measureTimeMillis {
             seatplan = SeatPlan(inputData)      // re-initialise grid
-            var prevSeating = mapOf<Point,Seat>()
-            for (i in (1..MAX_LOOP)) {
-                if (i == MAX_LOOP)
-                    throw AocException("reached max iteration limit")
-                seatplan.adjustSeating({ s, p -> seatplan.getAdjacentOccupiedPart2(s, p) }, MIN_OCCUPIED_P2)
-                if (seatplan.grid.getData() == prevSeating) {
-                    result = seatplan.countOf(Seat.OCCUPIED)
-                    log.info("number of iterations: $i")
-                    break
-                }
-                prevSeating = seatplan.grid.getData()
-            }
+            result = adjustSeating({ s, p -> seatplan.getAdjacentOccupiedPart2(s, p) }, MIN_OCCUPIED_P2)
         }
         return PuzzlePartSolution(2, result.toString(), elapsed)
     }
 
+    private fun adjustSeating(findOccupied: (Map<Point,Seat>, Point) -> Int, minOccupied: Int): Int {
+        var prevSeating = mapOf<Point,Seat>()
+        for (i in (1..MAX_LOOP)) {
+            seatplan.adjustSeating(findOccupied, minOccupied)
+            if (seatplan.grid.getData() == prevSeating) {
+                log.info("number of iterations: $i")
+                return seatplan.countOf(Seat.OCCUPIED)
+            }
+            prevSeating = seatplan.grid.getData()
+        }
+        throw AocException("reached max iteration limit")
+    }
 }
