@@ -37,6 +37,7 @@ class Day12Test {
         val navigation = Navigation(inputLines)
         println(navigation.data)
         navigation.instructions.forEach { println(it) }
+        assertThat(navigation.instructions.size).isEqualTo(8)
     }
 
     @Test
