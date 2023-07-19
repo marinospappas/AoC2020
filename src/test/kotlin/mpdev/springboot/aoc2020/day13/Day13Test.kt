@@ -38,11 +38,11 @@ class Day13Test {
         assertThat(inputLines.size).isEqualTo(2)
         val timetable = BusTimeTable(inputLines[1])
         val departureTime = inputLines[0].toInt()
-        timetable.data.forEach { println(it) }
+        timetable.timetableData.forEach { println(it) }
         println(departureTime)
-        assertThat(timetable.data.size).isEqualTo(5)
-        assertTrue(timetable.data.values.all { it == listOf<Int>() })
-        assertThat(timetable.data.keys).isEqualTo(setOf(7,13,59,31,19))
+        assertThat(timetable.timetableData.size).isEqualTo(5)
+        assertTrue(timetable.timetableData.values.all { it == listOf<Int>() })
+        assertThat(timetable.timetableData.keys).isEqualTo(setOf(7,13,59,31,19))
         assertThat(departureTime).isEqualTo(939)
     }
 
@@ -52,7 +52,7 @@ class Day13Test {
         val timetable = BusTimeTable(inputLines[1])
         val departureTime = inputLines[0].toInt()
         timetable.fillTimetable(departureTime)
-        timetable.data.forEach { println(it) }
+        timetable.timetableData.forEach { println(it) }
     }
 
     @Test
@@ -63,13 +63,22 @@ class Day13Test {
         assertThat(res.result).isEqualTo("295")
     }
 
+    @Test
+    @Order(5)
+    fun `Calculates Time for Part 2`() {
+        val timetable = BusTimeTable(inputLines[1])
+        println(timetable.busSchedule)
+        assertThat(timetable.busSchedule.size).isEqualTo(5)
+        timetable.busesSequence(4).take(5).forEach { println("[$it]     ${it*19}") }
+        assertThat(timetable.busesSequence(4).take(1).first() * 19 - 7).isEqualTo(1068781)
+    }
 
     @Test
     @Order(7)
     fun `Solves Part 2`() {
         val res = puzzleSolver.solvePart2()
         println("Elapsed time: ${res.elapsedTime} ${res.timeUnit}")
-        assertThat(res.result).isEqualTo("286")
+        assertThat(res.result).isEqualTo("1068781")
     }
 
 }
