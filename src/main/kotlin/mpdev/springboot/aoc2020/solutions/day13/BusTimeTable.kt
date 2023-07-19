@@ -52,6 +52,8 @@ class BusTimeTable(input: String) {
         }
         val n = (k + id_1 * n_1) / id
         return generateSequence(n) {
+            // all ids are prime so increment the round by the product of all previous ids
+            // this will maintain the previous buses sequence
             it + busSchedule.subList(0,indx).fold(1L) { acc, pair -> acc * pair.second }
         }
     }
