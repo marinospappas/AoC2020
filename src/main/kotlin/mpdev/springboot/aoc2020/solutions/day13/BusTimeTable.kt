@@ -26,7 +26,7 @@ class BusTimeTable(input: String) {
     var recursionLevel = 0
 
     /**
-     * recursively call busesSequence for indx-1 and find the first element that satisfies the below equations:
+     * recursively call busesSequence for index-1 and find the first element that satisfies the below equations:
      * id1 * n1 = t
      * id2 * n2 = t + k
      *
