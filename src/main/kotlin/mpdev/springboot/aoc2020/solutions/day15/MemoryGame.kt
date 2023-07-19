@@ -4,12 +4,13 @@ class MemoryGame(input: List<String>) {
 
     val startSequence = input[0].split(",").map { it.toInt() }
     var round = 0
+    val startSequenceSize = startSequence.size
     val numbersIndex = startSequence.associateWith { NumbersIndex() }.toMutableMap()
     var lastSpoken = -1
 
     fun playRound(): Int {
         var nextNumber: Int
-        if (round < startSequence.size) {
+        if (round < startSequenceSize) {
             nextNumber = startSequence[round]
         }
         else {
@@ -19,11 +20,13 @@ class MemoryGame(input: List<String>) {
             else
                 nextNumber = numbersIndex[nextNumber]!!.lastRoundSpoken - numbersIndex[nextNumber]!!.prevRoundSpoken
         }
-        if (numbersIndex[nextNumber] == null)
-            numbersIndex[nextNumber] = NumbersIndex()
-        numbersIndex[nextNumber]!!.prevRoundSpoken = numbersIndex[nextNumber]!!.lastRoundSpoken
-        numbersIndex[nextNumber]!!.lastRoundSpoken = round
-        numbersIndex[nextNumber]!!.timesSpoken += 1
+        var numberIndex: NumbersIndex?
+        if (numbersIndex[nextNumber].also { numberIndex = it } == null)
+            numberIndex = NumbersIndex()
+        numberIndex!!.prevRoundSpoken = numberIndex!!.lastRoundSpoken
+        numberIndex!!.lastRoundSpoken = round
+        numberIndex!!.timesSpoken += 1
+        numbersIndex[nextNumber] = numberIndex!!
         lastSpoken = nextNumber
         ++round
         return nextNumber

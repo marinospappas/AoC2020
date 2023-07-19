@@ -31,6 +31,12 @@ class Day15: PuzzleSolver() {
         val elapsed = measureTimeMillis {
             repeat(2020) { result = memoryGame.playRound() }
         }
+        log.info("part 1 distinct numbers: {}, most frequent number: {} ({}) times, least frequent number {} ({}) times",
+            memoryGame.numbersIndex.size,
+            memoryGame.numbersIndex.maxBy { it.value.timesSpoken }.key,
+            memoryGame.numbersIndex.maxBy { it.value.timesSpoken }.value.timesSpoken,
+            memoryGame.numbersIndex.minBy { it.value.timesSpoken }.key,
+            memoryGame.numbersIndex.minBy { it.value.timesSpoken }.value.timesSpoken)
         return PuzzlePartSolution(1, result.toString(), elapsed)
     }
 
@@ -39,6 +45,12 @@ class Day15: PuzzleSolver() {
             memoryGame = MemoryGame(inputData)
             repeat(30_000_000) { result = memoryGame.playRound() }
         }
+        log.info("part 2 distinct numbers: {}, most frequent number: {} ({}) times, least frequent number {} ({}) times",
+            memoryGame.numbersIndex.size,
+            memoryGame.numbersIndex.maxBy { it.value.timesSpoken }.key,
+            memoryGame.numbersIndex.maxBy { it.value.timesSpoken }.value.timesSpoken,
+            memoryGame.numbersIndex.minBy { it.value.timesSpoken }.key,
+            memoryGame.numbersIndex.minBy { it.value.timesSpoken }.value.timesSpoken)
         return PuzzlePartSolution(2, result.toString(), elapsed)
     }
 
