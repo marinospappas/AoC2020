@@ -15,9 +15,7 @@ class Decoder(input: List<String>, part1Or2: Int = 1) {
     fun updateMemory() {
         if (data.first().ver == "V1")
             data.forEach { p ->
-                p.values.forEach { (addr, value) ->
-                    mem[addr] = value and p.andMask or p.orMask
-                }
+                p.values.forEach { (addr, value) -> mem[addr] = value and p.andMask or p.orMask }
             }
         else
             data.forEach { p ->
