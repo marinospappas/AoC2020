@@ -14,9 +14,9 @@ class MemoryGame(input: List<String>) {
 
     // keep a cache of the info for ALL potential numbers in Array for maximum performance
     // a Map should be used instead in case of memory constraints in which case only info for numbers spoken would be saved
-    val infoCache = Array(MAX_ROUNDS) { NumbersInfo() }
+    private val infoCache = Array(MAX_ROUNDS) { NumbersInfo() }
     // information about 0 (most frequent number) is cached here for even better performance
-    var numberZeroInfo = NumbersInfo()
+    private var numberZeroInfo = NumbersInfo()
 
     private var nextNumber = 0
 
@@ -50,6 +50,15 @@ class MemoryGame(input: List<String>) {
         numberInfo.lastRoundSpoken = round
         numberInfo.timesSpoken += 1
         lastSpokenInfo = numberInfo
+    }
+
+    fun getStats(): String {
+        val distinctNumbers = infoCache.count { it.timesSpoken > 0 }
+        val zeroTimes = numberZeroInfo.timesSpoken
+        val leastFreqNumber = infoCache.indexOf(infoCache.filter { it.timesSpoken > 0 }.minBy { it.timesSpoken })
+        val leastFreqNumberTimes = infoCache.filter { it.timesSpoken > 0 }.minOf { it.timesSpoken }
+        val maxNumber = infoCache.indices.last { infoCache[it].timesSpoken > 0 }
+        return "\n    distinct numbers: $distinctNumbers, max number $maxNumber, number 0 spoken $zeroTimes times, least frequent number $leastFreqNumber ($leastFreqNumberTimes) times"
     }
 }
 

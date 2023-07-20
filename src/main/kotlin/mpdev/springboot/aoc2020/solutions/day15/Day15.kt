@@ -32,12 +32,7 @@ class Day15: PuzzleSolver() {
             repeat(2020) { memoryGame.playRound() }
             result = memoryGame.getLastNumber()
         }
-        log.info("part 1 distinct numbers: {}, 0 spoken {} times, least frequent number {} ({}) times",
-            memoryGame.infoCache.count { it.timesSpoken > 0 },
-            memoryGame.numberZeroInfo.timesSpoken,
-            memoryGame.infoCache.indexOf(memoryGame.infoCache.filter { it.timesSpoken > 0 }.minBy { it.timesSpoken }),
-            memoryGame.infoCache.filter { it.timesSpoken > 0 }.minOf { it.timesSpoken })
-        log.info("part 1 maximum number: {}", memoryGame.infoCache.indices.filter { memoryGame.infoCache[it].timesSpoken > 0 }.max())
+        log.info("part 1 stats: {}", memoryGame.getStats())
         return PuzzlePartSolution(1, result.toString(), elapsed)
     }
 
@@ -47,12 +42,7 @@ class Day15: PuzzleSolver() {
             repeat(30_000_000) { memoryGame.playRound() }
             result = memoryGame.getLastNumber()
         }
-        log.info("part 2 distinct numbers: {}, 0 spoken {} times, least frequent number {} ({}) times",
-            memoryGame.infoCache.count { it.timesSpoken > 0 },
-            memoryGame.numberZeroInfo.timesSpoken,
-            memoryGame.infoCache.indexOf(memoryGame.infoCache.filter { it.timesSpoken > 0 }.minBy { it.timesSpoken }),
-            memoryGame.infoCache.filter { it.timesSpoken > 0 }.minOf { it.timesSpoken })
-        log.info("part 2 maximum number: {}", memoryGame.infoCache.indices.filter { memoryGame.infoCache[it].timesSpoken > 0 }.max())
+        log.info("part 2 stats: {}", memoryGame.getStats())
         return PuzzlePartSolution(2, result.toString(), elapsed)
     }
 
