@@ -15,8 +15,9 @@ import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.CsvSource
 import org.junit.jupiter.params.provider.MethodSource
 import java.util.Hashtable
-import java.util.Random
 import java.util.stream.Stream
+import kotlin.random.Random
+import kotlin.random.nextInt
 import kotlin.system.measureTimeMillis
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -99,14 +100,15 @@ class Day15Test {
         val map = mutableMapOf<Int,NumbersInfo>()
         val hashTable = Hashtable<Int,NumbersInfo>()
         val array = Array(size.toInt()){NumbersInfo()}
+        val array1 = Array(size.toInt()/10+1){NumbersInfo()}
+        val map1 = mutableMapOf<Int,Int>()
 
         repeat(size.toInt()) { map[it] = NumbersInfo() }
         repeat(size.toInt()) { hashTable[it] = NumbersInfo() }
-        val random = Random()
 
         var elapsed = measureTimeMillis {
             repeat(30_000_000) {
-                val key = random.nextInt(10_000)
+                val key = Random.nextInt(10_000..20_000)
                 var info = NumbersInfo()
                 if (map[key] != null)
                     info = map[key] ?: throw AocException("map read error")
@@ -119,7 +121,7 @@ class Day15Test {
         val immMap = map.toMap()
         elapsed = measureTimeMillis {
             repeat(30_000_000) {
-                val key = random.nextInt(10_000)
+                val key = Random.nextInt(10_000..20_000)
                 var info = NumbersInfo()
                 if (immMap[key] != null)
                     info = immMap[key] ?: throw AocException("map read error")
@@ -130,7 +132,7 @@ class Day15Test {
 
         elapsed = measureTimeMillis {
             repeat(30_000_000) {
-                val key = random.nextInt(10_000)
+                val key = Random.nextInt(10_000..20_000)
                 var info = NumbersInfo()
                 if (hashTable[key] != null)
                     info = hashTable[key] ?: throw AocException("map read error")
@@ -142,12 +144,25 @@ class Day15Test {
 
         elapsed = measureTimeMillis {
             repeat(30_000_000) {
-                val key = random.nextInt(10_000)
+                val key = Random.nextInt(0..(size.toInt()/10))
                 val info = array[key]
                 info.timesSpoken++
-                array[key] = info
             }
         }
-        println("Array: $elapsed milli-sec")
+        println("Array of full data: $elapsed milli-sec")
+
+        var arrayIndx = 0
+
+        elapsed = measureTimeMillis {
+            repeat(30_000_000) {
+                val key = Random.nextInt(10_000..(10_000+size.toInt()/10))
+                if (map1[key] == null)
+                    map1[key] = arrayIndx++
+                val mappedKey = map1[key]!!
+                val info = array1[mappedKey]
+                info.timesSpoken++
+            }
+        }
+        println("Array of data used with index mapping: $elapsed milli-sec (size of index map: ${map1.size})")
     }
 }
