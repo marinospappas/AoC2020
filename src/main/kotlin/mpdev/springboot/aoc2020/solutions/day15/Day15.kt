@@ -29,28 +29,30 @@ class Day15: PuzzleSolver() {
 
     override fun solvePart1(): PuzzlePartSolution {
         val elapsed = measureTimeMillis {
-            repeat(2020) { result = memoryGame.playRound() }
+            repeat(2020) { memoryGame.playRound() }
+            result = memoryGame.getLastNumber()
         }
-        log.info("part 1 distinct numbers: {}, most frequent number: {} ({}) times, least frequent number {} ({}) times",
-            memoryGame.numbersIndex.size,
-            memoryGame.numbersIndex.maxBy { it.value.timesSpoken }.key,
-            memoryGame.numbersIndex.maxBy { it.value.timesSpoken }.value.timesSpoken,
-            memoryGame.numbersIndex.minBy { it.value.timesSpoken }.key,
-            memoryGame.numbersIndex.minBy { it.value.timesSpoken }.value.timesSpoken)
+        log.info("part 1 distinct numbers: {}, 0 spoken {} times, least frequent number {} ({}) times",
+            memoryGame.infoCache.count { it.timesSpoken > 0 },
+            memoryGame.numberZeroInfo.timesSpoken,
+            memoryGame.infoCache.indexOf(memoryGame.infoCache.filter { it.timesSpoken > 0 }.minBy { it.timesSpoken }),
+            memoryGame.infoCache.filter { it.timesSpoken > 0 }.minOf { it.timesSpoken })
+        log.info("part 1 maximum number: {}", memoryGame.infoCache.indices.filter { memoryGame.infoCache[it].timesSpoken > 0 }.max())
         return PuzzlePartSolution(1, result.toString(), elapsed)
     }
 
     override fun solvePart2(): PuzzlePartSolution {
         val elapsed = measureTimeMillis {
-            memoryGame = MemoryGame(inputData)
-            repeat(30_000_000) { result = memoryGame.playRound() }
+            memoryGame.resetGame()
+            repeat(30_000_000) { memoryGame.playRound() }
+            result = memoryGame.getLastNumber()
         }
-        log.info("part 2 distinct numbers: {}, most frequent number: {} ({}) times, least frequent number {} ({}) times",
-            memoryGame.numbersIndex.size,
-            memoryGame.numbersIndex.maxBy { it.value.timesSpoken }.key,
-            memoryGame.numbersIndex.maxBy { it.value.timesSpoken }.value.timesSpoken,
-            memoryGame.numbersIndex.minBy { it.value.timesSpoken }.key,
-            memoryGame.numbersIndex.minBy { it.value.timesSpoken }.value.timesSpoken)
+        log.info("part 2 distinct numbers: {}, 0 spoken {} times, least frequent number {} ({}) times",
+            memoryGame.infoCache.count { it.timesSpoken > 0 },
+            memoryGame.numberZeroInfo.timesSpoken,
+            memoryGame.infoCache.indexOf(memoryGame.infoCache.filter { it.timesSpoken > 0 }.minBy { it.timesSpoken }),
+            memoryGame.infoCache.filter { it.timesSpoken > 0 }.minOf { it.timesSpoken })
+        log.info("part 2 maximum number: {}", memoryGame.infoCache.indices.filter { memoryGame.infoCache[it].timesSpoken > 0 }.max())
         return PuzzlePartSolution(2, result.toString(), elapsed)
     }
 

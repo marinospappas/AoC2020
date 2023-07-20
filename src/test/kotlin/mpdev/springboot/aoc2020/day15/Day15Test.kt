@@ -3,6 +3,8 @@ package mpdev.springboot.aoc2020.day15
 import mpdev.springboot.aoc2020.input.InputDataReader
 import mpdev.springboot.aoc2020.solutions.day15.Day15
 import mpdev.springboot.aoc2020.solutions.day15.MemoryGame
+import mpdev.springboot.aoc2020.solutions.day15.NumbersInfo
+import mpdev.springboot.aoc2020.utils.AocException
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Order
@@ -10,8 +12,12 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.CsvSource
 import org.junit.jupiter.params.provider.MethodSource
+import java.util.Hashtable
+import java.util.Random
 import java.util.stream.Stream
+import kotlin.system.measureTimeMillis
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class Day15Test {
@@ -39,7 +45,6 @@ class Day15Test {
     fun `Reads Input and Sets up Memory Game`() {
         val memoryGame = MemoryGame(inputLines)
         println(memoryGame.startSequence)
-        println(memoryGame.numbersIndex)
         assertThat(memoryGame.startSequence).isEqualTo(listOf(0,3,6))
     }
 
@@ -47,8 +52,9 @@ class Day15Test {
     @Order(3)
     fun `Identifies Numbers to Speak based on Rules`() {
         val memoryGame = MemoryGame(inputLines)
-        repeat(9) { print("${memoryGame.playRound()}  ") }
-        val last = memoryGame.playRound()
+        repeat(9) { memoryGame.playRound(); print("${memoryGame.getLastNumber()}  ") }
+        memoryGame.playRound()
+        val last = memoryGame.getLastNumber()
         println(last)
         assertThat(last).isEqualTo(0)
     }
@@ -84,4 +90,64 @@ class Day15Test {
         Arguments.of(listOf("3,2,1"), "438", "18"),
         Arguments.of(listOf("3,1,2"), "1836", "362"),
     )
+
+    @ParameterizedTest
+    @CsvSource(value = ["10000", "3000000", "30000000"])
+    @Order(9)
+    fun `NumberInfo cache Performance test`(size: String) {
+        println("Size: $size")
+        val map = mutableMapOf<Int,NumbersInfo>()
+        val hashTable = Hashtable<Int,NumbersInfo>()
+        val array = Array(size.toInt()){NumbersInfo()}
+
+        repeat(size.toInt()) { map[it] = NumbersInfo() }
+        repeat(size.toInt()) { hashTable[it] = NumbersInfo() }
+        val random = Random()
+
+        var elapsed = measureTimeMillis {
+            repeat(30_000_000) {
+                val key = random.nextInt(10_000)
+                var info = NumbersInfo()
+                if (map[key] != null)
+                    info = map[key] ?: throw AocException("map read error")
+                info.timesSpoken++
+                map[key] = info
+            }
+        }
+        println("Kotlin MutableMap: $elapsed milli-sec")
+
+        val immMap = map.toMap()
+        elapsed = measureTimeMillis {
+            repeat(30_000_000) {
+                val key = random.nextInt(10_000)
+                var info = NumbersInfo()
+                if (immMap[key] != null)
+                    info = immMap[key] ?: throw AocException("map read error")
+                info.timesSpoken++
+            }
+        }
+        println("Kotlin immutable Map: $elapsed milli-sec")
+
+        elapsed = measureTimeMillis {
+            repeat(30_000_000) {
+                val key = random.nextInt(10_000)
+                var info = NumbersInfo()
+                if (hashTable[key] != null)
+                    info = hashTable[key] ?: throw AocException("map read error")
+                info.timesSpoken++
+                hashTable[key] = info
+            }
+        }
+        println("Java HashTable: $elapsed milli-sec")
+
+        elapsed = measureTimeMillis {
+            repeat(30_000_000) {
+                val key = random.nextInt(10_000)
+                val info = array[key]
+                info.timesSpoken++
+                array[key] = info
+            }
+        }
+        println("Array: $elapsed milli-sec")
+    }
 }

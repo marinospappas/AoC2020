@@ -1,47 +1,59 @@
 package mpdev.springboot.aoc2020.solutions.day15
 
-import mpdev.springboot.aoc2020.utils.AocException
-
 class MemoryGame(input: List<String>) {
 
-    val startSequence = input[0].split(",").map { it.toInt() }
-    var round = 0
-    val startSequenceSize = startSequence.size
-    val numbersIndex = startSequence.associateWith { NumbersIndex() }.toMutableMap()
-    var lastSpoken = -1
-    lateinit var lastSpokenIndex: NumbersIndex
-    var number0Index = NumbersIndex()   // information about 0 (most frequent number) is cached here
+    companion object {
+        const val MAX_ROUNDS = 30_000_000
+    }
 
-    fun playRound(): Int {
-        val nextNumber: Int
-        if (round < startSequenceSize) {
-            nextNumber = startSequence[round]
-        } else {
-            if (lastSpokenIndex.timesSpoken == 1)
-                nextNumber = 0
-            else
-                nextNumber = lastSpokenIndex.lastRoundSpoken - lastSpokenIndex.prevRoundSpoken
+    val startSequence = input[0].split(",").map { it.toInt() }
+    private val startSequenceSize = startSequence.size
+
+    private var round = 0
+    private lateinit var lastSpokenInfo: NumbersInfo
+
+    // keep a cache of the info for ALL potential numbers in Array for maximum performance
+    // a Map should be used instead in case of memory constraints in which case only info for numbers spoken would be saved
+    val infoCache = Array(MAX_ROUNDS) { NumbersInfo() }
+    // information about 0 (most frequent number) is cached here for even better performance
+    var numberZeroInfo = NumbersInfo()
+
+    private var nextNumber = 0
+
+    fun resetGame() {
+        infoCache.forEach { it.timesSpoken = 0; it.lastRoundSpoken = 0; it.prevRoundSpoken = 0 }
+        round = 0
+    }
+
+    fun getLastNumber() = nextNumber
+
+    fun playRound() {
+        nextNumber = if (round < startSequenceSize) {
+            startSequence[round]
         }
-        var numberIndex = NumbersIndex()
-        if (nextNumber == 0)
-            numberIndex = number0Index
         else {
-            if (numbersIndex[nextNumber] != null)
-                numberIndex = numbersIndex[nextNumber] ?: throw AocException("unexpected error 2020-15-2")
+            if (lastSpokenInfo.timesSpoken == 1)
+                0
+            else
+                lastSpokenInfo.lastRoundSpoken - lastSpokenInfo.prevRoundSpoken
         }
-        numberIndex.prevRoundSpoken = numberIndex.lastRoundSpoken
-        numberIndex.lastRoundSpoken = round
-        numberIndex.timesSpoken += 1
-        if (nextNumber != 0)
-            numbersIndex[nextNumber] = numberIndex
-        lastSpoken = nextNumber
-        lastSpokenIndex = numberIndex
+        updateNumberInfo(nextNumber)
         ++round
-        return nextNumber
+    }
+
+    private fun updateNumberInfo(number: Int) {
+        val numberInfo = if (number == 0)
+            numberZeroInfo
+        else
+            infoCache[number]
+        numberInfo.prevRoundSpoken = numberInfo.lastRoundSpoken
+        numberInfo.lastRoundSpoken = round
+        numberInfo.timesSpoken += 1
+        lastSpokenInfo = numberInfo
     }
 }
 
-data class NumbersIndex(var timesSpoken: Int = 0, var lastRoundSpoken: Int = 0, var prevRoundSpoken: Int = 0) {
+data class NumbersInfo(var timesSpoken: Int = 0, var lastRoundSpoken: Int = 0, var prevRoundSpoken: Int = 0) {
     override fun toString() =
         "[timesSpoken: $timesSpoken, lastRoundSpoken: $lastRoundSpoken, prevRoundSpoken:: $prevRoundSpoken]"
 }
