@@ -29,9 +29,7 @@ class Day17: PuzzleSolver() {
 
     override fun solvePart1(): PuzzlePartSolution {
         val elapsed = measureTimeMillis {
-            repeat(6) {
-                cubes.runCycle()
-            }
+            repeat(6) { cubes.runCycle() }
             result = cubes.countOf(Cube.ACTIVE)
         }
         log.info("part 1 grid dimensions {}", cubes.grid.getDimensions().toList())
@@ -41,9 +39,7 @@ class Day17: PuzzleSolver() {
     override fun solvePart2(): PuzzlePartSolution {
         val elapsed = measureTimeMillis {
             cubes = ConwayCubes(inputData, 2)
-            repeat(6) {
-                cubes.runCycle()
-            }
+            repeat(6) { cubes.runCycle() }
             result = cubes.countOf(Cube.ACTIVE)
         }
         log.info("part 2 grid dimensions {}", cubes.grid.getDimensions().toList())

@@ -4,8 +4,6 @@ import mpdev.springboot.aoc2020.input.InputDataReader
 import mpdev.springboot.aoc2020.solutions.day17.ConwayCubes
 import mpdev.springboot.aoc2020.solutions.day17.Cube
 import mpdev.springboot.aoc2020.solutions.day17.Day17
-import mpdev.springboot.aoc2020.utils.PointND
-import mpdev.springboot.aoc2020.utils.allValues
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Order
@@ -99,19 +97,5 @@ class Day17Test {
         val res = puzzleSolver.solvePart2()
         println("Elapsed time: ${res.elapsedTime} ${res.timeUnit}")
         assertThat(res.result).isEqualTo("848")
-    }
-
-    @Test
-    fun testArrayCombos() {
-        val arrayOfRange = arrayOf(
-            IntRange(-1,1), IntRange(-1,1), IntRange(-1,1)
-        )
-        println(arrayOfRange.allValues().size)
-        arrayOfRange.allValues().forEach { println(it) }
-    }
-
-    @Test
-    fun testAdjacent() {
-        PointND(intArrayOf(1,1,1)).adjacent().forEach { println(it) }
     }
 }

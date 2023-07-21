@@ -2,7 +2,7 @@ package mpdev.springboot.aoc2020.utils
 
 /**
  * N-dimension Point
- * coordinates Xi in array, the size of the array is the number of dimensions
+ * coordinates X(i) in array, the size of the array is the number of dimensions
  */
 data class PointND(var x_i: IntArray) {
 
@@ -16,6 +16,7 @@ data class PointND(var x_i: IntArray) {
         }
     })
 
+    // convenience functions to return the first 3 coordinates for 3 or more-dimension point
     fun x() = x_i[0]
     fun y() = x_i[1]
     fun z() = x_i[2]

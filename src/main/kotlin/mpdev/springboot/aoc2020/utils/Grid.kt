@@ -9,10 +9,10 @@ open class Grid<T>(input: List<String>, private val mapper: Map<Char,T>) {
     }
 
     private var data = mutableMapOf<Point,T>()
-    protected var maxX: Int
-    protected var maxY: Int
-    protected var minX: Int = 0
-    protected var minY: Int = 0
+    private var maxX: Int
+    private var maxY: Int
+    private var minX: Int = 0
+    private var minY: Int = 0
 
     init {
         input.indices.forEach { y ->
@@ -41,13 +41,13 @@ open class Grid<T>(input: List<String>, private val mapper: Map<Char,T>) {
         return grid
     }
 
-    protected fun map2Char(t: T) = mapper.entries.first { e -> e.value == t }.key
+    private fun map2Char(t: T) = mapper.entries.first { e -> e.value == t }.key
 
     open fun print() {
         printGrid(data2Grid())
     }
 
-    protected fun printGrid(grid: Array<CharArray>) {
+    private fun printGrid(grid: Array<CharArray>) {
         for (i in grid.indices) {
             print("${String.format("%2d",i)} ")
             for (j in grid.first().indices)

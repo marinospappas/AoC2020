@@ -1,6 +1,9 @@
 package mpdev.springboot.aoc2020.utils
 
-class GridND<T>(input: List<String>, val mapper: Map<Char,T>, val dimensions: Int = 2) {
+/**
+ * N-dimension Grid uses N-dimension Point
+ */
+class GridND<T>(input: List<String>, private val mapper: Map<Char,T>, private val dimensions: Int = 2) {
 
     companion object {
         const val DEFAULT_CHAR = '.'
@@ -46,28 +49,24 @@ class GridND<T>(input: List<String>, val mapper: Map<Char,T>, val dimensions: In
 
     private fun map2Char(t: T) = mapper.entries.first { e -> e.value == t }.key
 
-    private fun data2Grid(a: IntArray): Array<CharArray> {
-        val grid: Array<CharArray> = Array(maxX_i[1]-minX_i[1]+1) { CharArray(maxX_i[0]-minX_i[0]+1) { DEFAULT_CHAR } }
-        val thisData = if (a.isEmpty()) data else
-            data.filter {
-                it.key.x_i.sliceArray(2 until dimensions).contentEquals(a)
-            }
-        thisData.forEach { (pos, item) -> grid[pos.y()-minX_i[1]][pos.x()-minX_i[0]] = map2Char(item) }
-        return grid
-    }
-
     fun print() {
         if (dimensions == 2) {
-            printGrid2D(data2Grid(intArrayOf()))
+            printGrid2D(data2Grid2D(intArrayOf()))
         }
         else {
-            val addnlDimensions = dimensions - 2
-            val addnlRanges = Array(addnlDimensions) { IntRange(minX_i[it+2], maxX_i[it+2]) }
+            val addnlRanges = Array(dimensions - 2) { IntRange(minX_i[it+2], maxX_i[it+2]) }
             addnlRanges.allValues().forEach { dim ->
                 println("coord(i): $dim")
-                printGrid2D(data2Grid(dim.toIntArray()))
+                printGrid2D(data2Grid2D(dim.toIntArray()))
             }
         }
+    }
+
+    private fun data2Grid2D(a: IntArray): Array<CharArray> {
+        val grid: Array<CharArray> = Array(maxX_i[1]-minX_i[1]+1) { CharArray(maxX_i[0]-minX_i[0]+1) { DEFAULT_CHAR } }
+        val thisData = if (a.isEmpty()) data else data.filter { it.key.x_i.sliceArray(2 until dimensions).contentEquals(a) }
+        thisData.forEach { (pos, item) -> grid[pos.y()-minX_i[1]][pos.x()-minX_i[0]] = map2Char(item) }
+        return grid
     }
 
     private fun printGrid2D(grid: Array<CharArray>) {
