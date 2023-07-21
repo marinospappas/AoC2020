@@ -2,15 +2,17 @@ package mpdev.springboot.aoc2020.utils
 
 import java.awt.Point
 
-class Grid<T>(input: List<String>, private val mapper: Map<Char,T>) {
+open class Grid<T>(input: List<String>, private val mapper: Map<Char,T>) {
 
     companion object {
         const val DEFAULT_CHAR = '.'
     }
 
     private var data = mutableMapOf<Point,T>()
-    private var maxX: Int
-    private var maxY: Int
+    protected var maxX: Int
+    protected var maxY: Int
+    protected var minX: Int = 0
+    protected var minY: Int = 0
 
     init {
         input.indices.forEach { y ->
@@ -20,29 +22,32 @@ class Grid<T>(input: List<String>, private val mapper: Map<Char,T>) {
                 }
 
         }
-        maxX = input.first().length
-        maxY = input.size
+        maxX = input.first().length - 1
+        maxY = input.size - 1
     }
 
-    fun getData() = data.toMap()
-    fun getDataPoint(p: Point) = data[p]
-    fun setDataPoint(p: Point, t: T) {
+    open fun getData() = data.toMap()
+    open fun getDataPoint(p: Point) = data[p]
+    open fun setDataPoint(p: Point, t: T) {
         data[p] = t
     }
 
-    fun getDimensions() = Pair(maxX,maxY)
-    fun countOf(item: T) = data.values.count { it == item }
+    open fun getDimensions() = Pair(maxX-minX+1, maxY-minY+1)
+    open fun countOf(item: T) = data.values.count { it == item }
 
     private fun data2Grid(): Array<CharArray> {
-        val grid: Array<CharArray> = Array(maxY) { CharArray(maxX) { DEFAULT_CHAR } }
+        val grid: Array<CharArray> = Array(maxY+1) { CharArray(maxX+1) { DEFAULT_CHAR } }
         data.forEach { (pos, item) -> grid[pos.y][pos.x] = map2Char(item) }
         return grid
     }
 
-    private fun map2Char(t: T) = mapper.entries.first { e -> e.value == t }.key
+    protected fun map2Char(t: T) = mapper.entries.first { e -> e.value == t }.key
 
-    fun print() {
-        val grid = data2Grid()
+    open fun print() {
+        printGrid(data2Grid())
+    }
+
+    protected fun printGrid(grid: Array<CharArray>) {
         for (i in grid.indices) {
             print("${String.format("%2d",i)} ")
             for (j in grid.first().indices)
