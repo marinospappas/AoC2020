@@ -39,7 +39,20 @@ class Day18Test {
             println(inputLines[it])
             println(math.expressionList[it])
         }
-        assertThat(math.expressionList.size).isEqualTo(5)
+        assertThat(math.expressionList.size).isEqualTo(6)
+    }
+
+    @Test
+    @Order(2)
+    fun `Parses and Calculates Expressions`() {
+        val math = Math(inputLines)
+        val expected = listOf<Long>(71, 51, 26, 437, 12240, 13632)
+        inputLines.indices.forEach {
+            println(inputLines[it])
+            val res = math.calculate(math.expressionList[it])
+            println(res)
+            assertThat(res).isEqualTo(expected[it])
+        }
     }
 
     @Test
@@ -47,7 +60,7 @@ class Day18Test {
     fun `Solves Part 1`() {
         val res = puzzleSolver.solvePart1()
         println("Elapsed time: ${res.elapsedTime} ${res.timeUnit}")
-        assertThat(res.result).isEqualTo("51")
+        assertThat(res.result).isEqualTo("26457")
     }
 
     @Test

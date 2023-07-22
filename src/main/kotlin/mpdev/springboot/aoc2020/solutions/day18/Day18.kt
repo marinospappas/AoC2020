@@ -17,17 +17,19 @@ class Day18: PuzzleSolver() {
         setDay()
     }
 
-    var result = 0
+    var result = 0L
+    lateinit var math: Math
 
     override fun initSolver(): Pair<Long,String> {
         val elapsed = measureTimeMillis {
+            math = Math(inputData)
         }
         return Pair(elapsed, "milli-sec")
     }
 
     override fun solvePart1(): PuzzlePartSolution {
         val elapsed = measureTimeMillis {
-
+            result = math.expressionList.map { expr -> math.calculate(expr) }.sum()
         }
         return PuzzlePartSolution(1, result.toString(), elapsed)
     }

@@ -3,55 +3,32 @@ package mpdev.springboot.aoc2020.solutions.day18
 import mpdev.springboot.aoc2020.utils.AocException
 import java.util.*
 
-class Parser(val expression: List<Token>) {
+abstract class Parser {
 
-    private var accumulator = 0
-    private val stack = Stack<Int>()
+    protected lateinit var expression: List<Token>
+    protected var accumulator: Long = 0L
+    protected val stack: Stack<Long> = Stack()
 
-    fun parseExpression(): Int {
-        accumulator = parseTerm()
-        while (lookAhead().type == TokType.OPERATOR) {
-            stack.push(accumulator)
-            when (lookAhead().encToken) {
-                Kwd.ADD -> add()
-                Kwd.MULT -> multiply()
-                else -> expected("add or multiply operator")
-            }
-        }
-        return accumulator
-    }
+    abstract fun getPart1Or2(): Int
 
-    fun parseParenthesisedExpression(): Int {
-        return 0
-    }
-
-    fun parseTerm(): Int {
-
-    }
-
-    fun add(): Int {
-
-    }
-
-    fun multiply(): Int {
-
-    }
-
-    fun expected(msg: String) {
-        System.err.println("$msg found ${lookAhead().value}")
-    }
+    abstract fun calculate(expression: List<Token>): Long
 
     ////// expression scanner
 
-    var index = 0
+    protected var index: Int = -1
 
-    fun lookAhead(): Token = if (index < expression.size) expression[index+1] else Token(encToken = Kwd.END, type = TokType.END)
+    protected fun lookAhead(): Token = if (index < expression.size-1) expression[index+1] else Token(encToken = Kwd.END, type = TokType.END)
 
-    fun match(encValue: Kwd) {
+    protected fun match(encValue: Kwd): Token {
         val nextToken = lookAhead()
         if (nextToken.encToken == encValue)
             ++index
         else
             throw AocException("expected $encValue found ${nextToken.encToken}")
+        return nextToken
+    }
+
+    protected fun expected(msg: String) {
+        System.err.println("expected $msg found ${lookAhead().value}")
     }
 }
