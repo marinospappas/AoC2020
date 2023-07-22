@@ -15,23 +15,33 @@ class ParserPart2: Parser() {
 
     /**
      * <expression> ::= <term> [ <multop> <term> ] *
-     * <term> ::= <integer> | <parenthesised expression>
-     * <parenthesised expression> ::= <left paren> <expression> <right peren>
-     * <operator> ::= <addop> | <mulop>
+     * <term> ::= <factor> [ <multop> <factor> ] *
+     * <factor> ::= <integer> | <parenthesised expression>
+     * <parenthesised expression> ::= <left paren> <expression> <right paren>
      */
     private fun parseExpression() {
         parseTerm()
-        while (lookAhead().type == TokType.OPERATOR) {
+        while (lookAhead().encToken == Kwd.MULT) {
             stack.push(accumulator)
             when (lookAhead().encToken) {
-                Kwd.ADD -> add()
                 Kwd.MULT -> multiply()
-                else -> expected("add or multiply operator")
+                else -> expected("multiply operator")
             }
         }
     }
 
     private fun parseTerm() {
+        parseFactor()
+        while (lookAhead().encToken == Kwd.ADD) {
+            stack.push(accumulator)
+            when (lookAhead().encToken) {
+                Kwd.ADD -> add()
+                else -> expected("add operator")
+            }
+        }
+    }
+
+    private fun parseFactor() {
         when (lookAhead().type) {
             TokType.NUMBER -> parseNumber()
             TokType.PAREN -> parseParenthesisedExpression()

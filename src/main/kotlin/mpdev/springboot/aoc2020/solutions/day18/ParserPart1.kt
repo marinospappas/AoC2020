@@ -16,7 +16,7 @@ class ParserPart1: Parser() {
     /**
      * <expression> ::= <term> [ <operator> <term> ] *
      * <term> ::= <integer> | <parenthesised expression>
-     * <parenthesised expression> ::= <left paren> <expression> <right peren>
+     * <parenthesised expression> ::= <left paren> <expression> <right paren>
      * <operator> ::= <addop> | <multop>
      */
     private fun parseExpression() {

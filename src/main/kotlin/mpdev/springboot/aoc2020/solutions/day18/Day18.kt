@@ -29,13 +29,15 @@ class Day18: PuzzleSolver() {
 
     override fun solvePart1(): PuzzlePartSolution {
         val elapsed = measureTimeMillis {
-            result = math.expressionList.map { expr -> math.calculate(expr) }.sum()
+            result = math.expressionList.sumOf { expr -> math.calculate(expr) }
         }
         return PuzzlePartSolution(1, result.toString(), elapsed)
     }
 
     override fun solvePart2(): PuzzlePartSolution {
         val elapsed = measureTimeMillis {
+            math = Math(inputData, 2)
+            result = math.expressionList.sumOf { expr -> math.calculate(expr) }
 
         }
         return PuzzlePartSolution(2, result.toString(), elapsed)

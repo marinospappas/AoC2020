@@ -64,10 +64,23 @@ class Day18Test {
     }
 
     @Test
+    @Order(5)
+    fun `Parses and Calculates Expressions Part 2`() {
+        val math = Math(inputLines, 2)
+        val expected = listOf<Long>(231, 51, 46, 1445, 669060, 23340)
+        inputLines.indices.forEach {
+            println(inputLines[it])
+            val res = math.calculate(math.expressionList[it])
+            println(res)
+            assertThat(res).isEqualTo(expected[it])
+        }
+    }
+
+    @Test
     @Order(8)
     fun `Solves Part 2`() {
         val res = puzzleSolver.solvePart2()
         println("Elapsed time: ${res.elapsedTime} ${res.timeUnit}")
-        assertThat(res.result).isEqualTo("expected")
+        assertThat(res.result).isEqualTo("694173")
     }
 }
