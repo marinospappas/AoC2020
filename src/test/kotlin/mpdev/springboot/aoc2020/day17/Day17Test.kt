@@ -78,7 +78,7 @@ class Day17Test {
     }
 
     @Test
-    @Order(3)
+    @Order(6)
     fun `Runs Cycles and Activates and Deactivates Cubes Part 2`() {
         val cubes = ConwayCubes(inputLines, 2)
         cubes.printCubes()
