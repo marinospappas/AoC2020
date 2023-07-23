@@ -2,28 +2,18 @@ package mpdev.springboot.aoc2020.solutions.day18
 
 import mpdev.springboot.aoc2020.utils.AocException
 
-class Math(input: List<String>, val part1Or2: Int = 1) {
+class Math(input: List<String>, private val part1Or2: Int = 1) {
 
-    val expressionList = mutableListOf<List<Token>>()
+    val expressionList = processInput(input)
     private val parsers = listOf(ParserPart1(), ParserPart2())
+    private val parser = parsers.first { parser -> parser.getPart1Or2() == part1Or2 }
 
-    init {
-        processInput(input)
-    }
-
-    private fun getParser(part1Or2: Int): Parser =
-        parsers.first { parser -> parser.getPart1Or2() == part1Or2 }
-
-    fun calculate(expression: List<Token>): Long {
-        val parser = getParser(part1Or2)
-        return parser.calculate(expression)
-    }
+    fun calculate(expression: List<Token>) = parser.calculate(expression)
 
     ////////////////////////////////////////////////////////
 
-    private fun processInput(input: List<String>) {
-        input.forEach { line -> expressionList.add(expressionFromString(line)) }
-    }
+    private fun processInput(input: List<String>): List<List<Token>> =
+        input.map { line -> expressionFromString(line) }
 
     private fun expressionFromString(s: String): List<Token> {
         val expression = mutableListOf<Token>()
