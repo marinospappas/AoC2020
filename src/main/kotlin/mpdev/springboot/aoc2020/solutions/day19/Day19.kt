@@ -47,8 +47,8 @@ class Day19: PuzzleSolver() {
               8: 42 8 | 42            -> 42+ (one or more times)
               11: 42 11 31 | 42 31    -> 42+ 31+ (42 once or more followed by 31 once or more - both matched the same number of times)
             so rule 0 is now equivalent to
-              0: 42+ 42+ 32+          -> 42 twice or more followed by 32 once or more
-                                         (42 must be matched at least once more than the times 32 is matched)
+              0: 42+ 42+ 31+          -> 42 twice or more followed by 31 once or more
+                                        (42 must be matched at least once more than the times 31 is matched)
              */
             result = msgValidator.messages.count { msgValidator.match2(it, 42, 31) }
         }

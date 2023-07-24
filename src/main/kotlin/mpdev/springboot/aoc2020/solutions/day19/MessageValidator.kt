@@ -18,7 +18,7 @@ class MessageValidator(input: List<String>) {
 
     /**
      * match string against rule
-     * returns "": when all matched, String: the remaining part of s when the first part of s matched, null when no match
+     * returns "": when all matched, String: the remaining part of s when the first part of s matched, null: when no match
      */
     fun match(s: String, ruleId: Int): String? {
         val rule = rules[ruleId] ?: AocException("rule id $ruleId does not exist")
@@ -43,11 +43,11 @@ class MessageValidator(input: List<String>) {
     }
 
     /**
-     * matches rule repeated 1 or more times
-     * returns list of substrings left after each match occurs
+     * matches rule repeatedly 1 or more times
+     * returns list of substrings left after each match occurs (empty list if rule matched 0 times)
      * sets up temporary dummy rule to achieve this
      */
-    fun matchRepeated(s: String, ruleId: Int): List<String> {
+    private fun matchRepeated(s: String, ruleId: Int): List<String> {
         val ruleIds = mutableListOf(ruleId)
         val result = mutableListOf<String>()
         while (true) {

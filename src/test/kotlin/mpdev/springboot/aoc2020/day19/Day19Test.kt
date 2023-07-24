@@ -73,7 +73,7 @@ class Day19Test {
 
     @Test
     @Order(6)
-    fun `Successfully validates messages against looping rules`() {
+    fun `Successfully validates messages against repeated rules`() {
         val msgValidator = MessageValidator(input2())
         val expected = listOf(false,true,true,true,true,true,true,true,true,true,true,false,true,false,true)
         msgValidator.messages.indices.forEach{
