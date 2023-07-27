@@ -2,6 +2,7 @@ package mpdev.springboot.aoc2020.solutions.day20
 
 import mpdev.springboot.aoc2020.model.PuzzlePartSolution
 import mpdev.springboot.aoc2020.solutions.PuzzleSolver
+import mpdev.springboot.aoc2020.solutions.day20.TilePixel.*
 import org.springframework.stereotype.Component
 import kotlin.system.measureTimeMillis
 
@@ -38,7 +39,10 @@ class Day20: PuzzleSolver() {
 
     override fun solvePart2(): PuzzlePartSolution {
         val elapsed = measureTimeMillis {
-
+            // jigsaw has to have been solved already (part 1)
+            val picture = jigsaw.constructJigsaw()
+            result = jigsaw.matchShape(picture)?.countOf(WHITE)?.toLong()
+                ?: Long.MIN_VALUE
         }
         return PuzzlePartSolution(2, result.toString(), elapsed)
     }

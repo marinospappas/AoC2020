@@ -6,7 +6,8 @@ import java.awt.Point
 
 enum class TilePixel(val value: Char) {
     //BLACK('.'),   black pixels not included to improve performance
-    WHITE('#');
+    WHITE('#'),
+    MONSTER('O');
 
     companion object {
         val mapper: Map<Char,TilePixel> = values().associateBy { it.value }
@@ -29,30 +30,27 @@ enum class Transformation(private val value: String) {
 
     companion object {
 
-        var maxX = 0
-        var maxY = 0
-
-        fun apply(tile: Grid<TilePixel>, transformation: Transformation): Grid<TilePixel> =
+        fun apply(tile: Grid<TilePixel>, transformation: Transformation, sizeX: Int, sizeY: Int): Grid<TilePixel> =
             when (transformation) {
                 AS_IS -> Grid(tile.getData(), TilePixel.mapper)
-                ROTATE_1, ROTATE_2, ROTATE_3 -> rotate(tile, transformation.value.toInt())
-                FLIP_H, FLIP_V -> flip(tile, transformation.value)
-                ROTATE_1_FLIP_H -> flip( rotate(tile, 1), FLIP_H.value )
-                ROTATE_1_FLIP_V -> flip( rotate(tile, 1), FLIP_V.value )
+                ROTATE_1, ROTATE_2, ROTATE_3 -> rotate(tile, transformation.value.toInt(), sizeX, sizeY)
+                FLIP_H, FLIP_V -> flip(tile, transformation.value, sizeX, sizeY)
+                ROTATE_1_FLIP_H -> flip( rotate(tile, 1, sizeX, sizeY), FLIP_H.value, sizeX, sizeY )
+                ROTATE_1_FLIP_V -> flip( rotate(tile, 1, sizeX, sizeY), FLIP_V.value, sizeX, sizeY )
             }
 
-        private fun rotate(tile: Grid<TilePixel>, factor: Int): Grid<TilePixel> {
+        private fun rotate(tile: Grid<TilePixel>, factor: Int, sizeX: Int, sizeY: Int): Grid<TilePixel> {
             return when (factor) {
-                1 -> Grid(tile.getData().mapKeys { entry -> Point(maxX - entry.key.y, entry.key.x) }, TilePixel.mapper)
-                2 -> Grid(tile.getData().mapKeys { entry -> Point(maxX - entry.key.x, maxY - entry.key.y) }, TilePixel.mapper)
-                3 -> Grid(tile.getData().mapKeys { entry -> Point(entry.key.y, maxY - entry.key.x) }, TilePixel.mapper)
+                1 -> Grid(tile.getData().mapKeys { entry -> Point(sizeX-1 - entry.key.y, entry.key.x) }, TilePixel.mapper)
+                2 -> Grid(tile.getData().mapKeys { entry -> Point(sizeX-1 - entry.key.x, sizeY-1 - entry.key.y) }, TilePixel.mapper)
+                3 -> Grid(tile.getData().mapKeys { entry -> Point(entry.key.y, sizeY-1 - entry.key.x) }, TilePixel.mapper)
                 else -> throw AocException("error in rotate($factor)")
             }
         }
-        private fun flip(tile: Grid<TilePixel>, factor: String): Grid<TilePixel> {
+        private fun flip(tile: Grid<TilePixel>, factor: String, sizeX: Int, sizeY: Int): Grid<TilePixel> {
             return when (factor) {
-                "V" -> Grid(tile.getData().mapKeys { entry -> Point(maxX - entry.key.x, entry.key.y) }, TilePixel.mapper)
-                "H" -> Grid(tile.getData().mapKeys { entry -> Point(entry.key.x, maxY - entry.key.y) }, TilePixel.mapper)
+                "V" -> Grid(tile.getData().mapKeys { entry -> Point(sizeX-1 - entry.key.x, entry.key.y) }, TilePixel.mapper)
+                "H" -> Grid(tile.getData().mapKeys { entry -> Point(entry.key.x, sizeY-1 - entry.key.y) }, TilePixel.mapper)
                 else -> throw AocException("error in flip($factor)")
             }
         }
