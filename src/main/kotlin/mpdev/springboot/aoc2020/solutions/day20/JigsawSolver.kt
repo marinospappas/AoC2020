@@ -7,7 +7,6 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.awt.Point
 import kotlin.math.sqrt
-import kotlin.system.measureTimeMillis
 
 class JigsawSolver(input: List<String>) {
 
@@ -109,21 +108,15 @@ class JigsawSolver(input: List<String>) {
     private fun tileFitsWithTop(tile: TransformedTile, jigsaw: List<TransformedTile>): Boolean {
         val newTileIndex = jigsaw.lastIndex + 1
         val tileAboveIndex = newTileIndex - sideSize
-        val newTileTopData = transformedTilesPerimeter[tile]?.get(TOP.ordinal)
-            ?: throw AocException("could not get tile $tile")
-        val tileAboveBottomData = transformedTilesPerimeter[TransformedTile(jigsaw[tileAboveIndex].tileId, jigsaw[tileAboveIndex].transformedState)]?.get(BOTTOM.ordinal)
-            ?: throw AocException("could not get tile ${TransformedTile(jigsaw[tileAboveIndex].tileId, jigsaw[tileAboveIndex].transformedState)}")
-        return newTileTopData == tileAboveBottomData
+        return transformedTilesPerimeter[tile]?.get(TOP.ordinal) ==
+                transformedTilesPerimeter[TransformedTile(jigsaw[tileAboveIndex].tileId, jigsaw[tileAboveIndex].transformedState)]?.get(BOTTOM.ordinal)
     }
 
     private fun tileFitsWithLeft(tile: TransformedTile, jigsaw: List<TransformedTile>): Boolean {
         val newTileIndex = jigsaw.lastIndex + 1
         val tileLeftIndex = newTileIndex - 1
-        val newTileLeftData = transformedTilesPerimeter[tile]?.get(LEFT.ordinal)
-            ?: throw AocException("could not get tile $tile")
-        val tileLeftRightData = transformedTilesPerimeter[TransformedTile(jigsaw[tileLeftIndex].tileId, jigsaw[tileLeftIndex].transformedState)]?.get(RIGHT.ordinal)
-            ?: throw AocException("could not get tile ${TransformedTile(jigsaw[tileLeftIndex].tileId, jigsaw[tileLeftIndex].transformedState)}")
-        return newTileLeftData == tileLeftRightData
+        return transformedTilesPerimeter[tile]?.get(LEFT.ordinal) ==
+                transformedTilesPerimeter[TransformedTile(jigsaw[tileLeftIndex].tileId, jigsaw[tileLeftIndex].transformedState)]?.get(RIGHT.ordinal)
     }
 
     //////// part 2
@@ -154,18 +147,19 @@ class JigsawSolver(input: List<String>) {
 
     private fun findShapeInPicture(picture: Grid<TilePixel>, shape: Grid<TilePixel>): Boolean {
         var found = false
-        val elapsed = measureTimeMillis {
-            picture.getData().forEach { picEntry ->
+        val picSize = picture.getDimensions().first
+        val shapeLength = shape.getDimensions().first
+        picture.getData()
+            .filter { it.key.y > 1 && it.key.y < picSize - 2 && it.key.x < picSize - shapeLength }
+            .forEach { picEntry ->
                 val xOffs = picEntry.key.x
                 val yOffs = picEntry.key.y - 1
                 val dataToMatch = shape.getData().keys.map { Point(it.x + xOffs, it.y + yOffs) }.toSet()
-                if (picture.getData().keys.containsAll(dataToMatch)) {
+                if (dataToMatch.none { picture.getDataPoint(it) == null }) {
                     dataToMatch.forEach { point -> picture.setDataPoint(point, TilePixel.MONSTER) }
                     found = true
                 }
             }
-        }
-        log.info("findShapeInPicture {} msec", elapsed)
         return found
     }
 
