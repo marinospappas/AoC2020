@@ -24,7 +24,6 @@ class Day19: PuzzleSolver() {
     override fun initSolver(): Pair<Long,String> {
         val elapsed = measureTimeMillis {
             msgValidator = MessageValidator(inputData)
-
         }
         return Pair(elapsed, "milli-sec")
     }

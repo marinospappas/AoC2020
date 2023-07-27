@@ -2,28 +2,26 @@ package mpdev.springboot.aoc2020.utils
 
 import java.awt.Point
 
-open class Grid<T>(input: List<String>, private val mapper: Map<Char,T>) {
-
-    companion object {
-        const val DEFAULT_CHAR = '.'
-    }
+open class Grid<T>(input: List<String> = emptyList(), private val mapper: Map<Char,T>) {
 
     private var data = mutableMapOf<Point,T>()
-    private var maxX: Int
-    private var maxY: Int
+    private var maxX: Int = 0
+    private var maxY: Int = 0
     private var minX: Int = 0
     private var minY: Int = 0
 
     init {
-        input.indices.forEach { y ->
-                input[y].indices.forEach { x ->
-                    if (mapper[input[y][x]] != null)
-                        data[Point(x, y)] = mapper[input[y][x]]!!
-                }
-
+        if (input.isNotEmpty()) {
+            processInput(input)
+            maxX = data.keys.maxOf { it.x }
+            maxY = data.keys.maxOf { it.y }
         }
-        maxX = input.first().length - 1
-        maxY = input.size - 1
+    }
+
+    constructor(gridData: Map<Point,T>,  mapper: Map<Char,T>): this(mapper = mapper) {
+        data = gridData.toMutableMap()
+        maxX = data.keys.maxOf { it.x }
+        maxY = data.keys.maxOf { it.y }
     }
 
     open fun getData() = data.toMap()
@@ -34,6 +32,19 @@ open class Grid<T>(input: List<String>, private val mapper: Map<Char,T>) {
 
     open fun getDimensions() = Pair(maxX-minX+1, maxY-minY+1)
     open fun countOf(item: T) = data.values.count { it == item }
+
+    companion object {
+        const val DEFAULT_CHAR = '.'
+    }
+
+    private fun processInput(input: List<String>) {
+        input.indices.forEach { y ->
+            input[y].indices.forEach { x ->
+                if (mapper[input[y][x]] != null)
+                    data[Point(x, y)] = mapper[input[y][x]]!!
+            }
+        }
+    }
 
     private fun data2Grid(): Array<CharArray> {
         val grid: Array<CharArray> = Array(maxY+1) { CharArray(maxX+1) { DEFAULT_CHAR } }
