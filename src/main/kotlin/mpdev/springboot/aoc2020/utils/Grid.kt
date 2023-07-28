@@ -33,8 +33,20 @@ open class Grid<T>(input: List<String> = emptyList(), private val mapper: Map<Ch
     open fun getDimensions() = Pair(maxX-minX+1, maxY-minY+1)
     open fun countOf(item: T) = data.values.count { it == item }
 
+    // mapping of a column or a row to int by interpreting the co-ordinates as bit positions
+    fun mapRowToInt(n: Int, predicate: (T) -> Boolean = { true }) =
+        data.filter { e -> predicate(e.value) && e.key.y == n }.map { e -> bitToInt[e.key.x] }
+            .fold(0) { acc, i -> acc + i }
+
+    fun mapColToInt(n: Int, predicate: (T) -> Boolean = { true }) =
+        data.filter { e -> predicate(e.value) && e.key.x == n }.map { e -> bitToInt[e.key.y] }
+            .fold(0) { acc, i -> acc + i }
+
     companion object {
         const val DEFAULT_CHAR = '.'
+        private val bitToInt = intArrayOf( 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768,
+            65536, 131072, 262144, 524288, 1_048_576, 2_097_152, 4_194_304, 8_388_608,
+            16_777_216, 33_554_432, 67_108_864, 134_217_728, 268_435_456, 536_870_912, 1_073_741_824 )
     }
 
     private fun processInput(input: List<String>) {

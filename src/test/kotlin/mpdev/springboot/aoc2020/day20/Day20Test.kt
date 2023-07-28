@@ -101,6 +101,7 @@ class Day20Test {
         jigsaw.solve()
         println(jigsaw.solutions.size)
         jigsaw.solutions.forEach { println(it) }
+        println()
         println(jigsaw.getSolution())
         println(jigsaw.getSolutionCornerIds())
         val result = jigsaw.getSolutionCornerIds().fold(1L) { acc, i -> acc * i }

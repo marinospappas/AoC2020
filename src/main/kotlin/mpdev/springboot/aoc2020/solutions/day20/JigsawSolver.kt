@@ -14,8 +14,8 @@ class JigsawSolver(input: List<String>) {
 
     var tiles: Map<Int, Grid<TilePixel>>
     var transformedTiles: Map<TransformedTile, Grid<TilePixel>>
-    // keep all the perimeters of all the transformed tiles here for performance
-    var transformedTilesPerimeter: Map<TransformedTile, List<Set<Int>>>
+    // keep all the perimeters of all the transformed tiles here for performance - the pixels are encoded as integers
+    var transformedTilesPerimeter: Map<TransformedTile, List<Int>>
     var tilesNoBorders: Map<Int, Grid<TilePixel>>
     var jigsawSize = 0
     var sideSize = 0
@@ -58,25 +58,28 @@ class JigsawSolver(input: List<String>) {
             currentList.forEach { sol ->
                 newList.addAll(findTilesThatFitJigSaw(sol))
             }
-            if ((it+1) % sideSize == 0) {
+            if ((it+1) % sideSize == 0 || it < sideSize) {
                 log.info("round {} completed, solutions list size {}", it+1, newList.size)
                 //newList.forEach { tile -> println(tile) }
             }
             if (it+1 == sideSize) {
-                // cut down the list
-                val listToRemove = mutableListOf<List<TransformedTile>>()
-                newList.toList().forEach { sol ->
-                    if (listToRemove.contains(sol))
-                        return@forEach
-                    listToRemove.addAll(newList.filter { n -> n.first().tileId == sol.last().tileId && n.last().tileId == sol.first().tileId })
-                }
-                newList.removeAll(listToRemove)
-                log.info("after round {} the list of solutions is cleaned up of duplicates - new list size {}", it+1, newList.size)
+                // cut down the list by looking for pairs of entries that have the two top corners symmetric
+                newList.removeAll(cleanupSymmetricDoubleEntries(newList))
+                log.info("after round {} the list is cleaned up from symmetric double solutions - new list size {}", it+1, newList.size)
                 //newList.forEach { tile -> println(tile) }
             }
-
         }
         solutions = newList.toList()
+    }
+
+    private fun cleanupSymmetricDoubleEntries(solutions: List<List<TransformedTile>>): List<List<TransformedTile>> {
+        val listToRemove = mutableListOf<List<TransformedTile>>()
+        solutions.forEach { sol ->
+            if (listToRemove.contains(sol))
+                return@forEach
+            listToRemove.addAll(solutions.filter { e -> e.first().tileId == sol.last().tileId && e.last().tileId == sol.first().tileId })
+        }
+        return listToRemove
     }
 
     private fun findTilesThatFitJigSaw(currSolution: List<TransformedTile>): List<List<TransformedTile>> {
@@ -155,7 +158,7 @@ class JigsawSolver(input: List<String>) {
                 val xOffs = picEntry.key.x
                 val yOffs = picEntry.key.y - 1
                 val dataToMatch = shape.getData().keys.map { Point(it.x + xOffs, it.y + yOffs) }.toSet()
-                if (dataToMatch.none { picture.getDataPoint(it) == null }) {
+            if (dataToMatch.none { picture.getDataPoint(it) == null }) {
                     dataToMatch.forEach { point -> picture.setDataPoint(point, TilePixel.MONSTER) }
                     found = true
                 }
@@ -175,17 +178,17 @@ class JigsawSolver(input: List<String>) {
         return tilesWithoutBorders
     }
 
-    private fun getAllTransformedTiles(): Pair< Map<TransformedTile, Grid<TilePixel>>, Map<TransformedTile, List<Set<Int>>> > {
+    private fun getAllTransformedTiles(): Pair< Map<TransformedTile, Grid<TilePixel>>, Map<TransformedTile, List<Int>> > {
         val grids = mutableMapOf<TransformedTile, Grid<TilePixel>>()
-        val perimeters = mutableMapOf<TransformedTile, List<Set<Int>>>()
+        val perimeters = mutableMapOf<TransformedTile, List<Int>>()
         tiles.forEach { (tileId, grid) ->
             Transformation.values().forEach { transformation ->
                 val transformedGrid = Transformation.apply(grid, transformation, tileSize, tileSize)
                 grids[TransformedTile(tileId, transformation)] = transformedGrid
-                val top = transformedGrid.getData().filter { entry -> entry.key.y == 0 }.map { entry -> entry.key.x }.sorted().toSet()
-                val right = transformedGrid.getData().filter { entry -> entry.key.x == tileSize - 1 }.map { entry -> entry.key.y }.sorted().toSet()
-                val bottom = transformedGrid.getData().filter { entry -> entry.key.y ==  tileSize - 1 }.map { entry -> entry.key.x }.sorted().toSet()
-                val left = transformedGrid.getData().filter { entry -> entry.key.x == 0 }.map { entry -> entry.key.y }.sorted().toSet()
+                val top = transformedGrid.mapRowToInt(0)
+                val right = transformedGrid.mapColToInt(tileSize - 1)
+                val bottom = transformedGrid.mapRowToInt(tileSize - 1)
+                val left = transformedGrid.mapColToInt(0)
                 perimeters[TransformedTile(tileId, transformation)] = listOf(top, right, bottom, left)
             }
         }
