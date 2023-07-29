@@ -23,6 +23,7 @@ class FoodStore(input: List<String>) {
         allergens.keys.forEach { allergen ->
             // for each allergen find all the foods that contain it
             // and then find the common ingredients that are contained in all these foods
+            // these are the candidates that contain that allergen
             val foodsThatContainThisAllergen = foodsList.filter { it.allergens.contains(allergen) }
             val commonIngredients = foodsThatContainThisAllergen.map { it.ingredients }
                 .fold(allIngredients) { acc, ingredients -> acc.intersect(ingredients) }
@@ -34,7 +35,7 @@ class FoodStore(input: List<String>) {
         if (allergens.values.none { it.size == 1 })
             throw AocException("could not identify any allergens")
         while (allergens.values.any { it.size > 1 }) {
-            // find any allergens that come from a known ingredient
+            // find any allergens that come from a known ingredient (the allergens that are contained in only one ingredient)
             // and remove these ingredients from the allergens that have more than one ingredient on their list
             val identifiedAllergenIngredients = allergens.values.filter { it.size == 1 }.flatten()
             identifiedAllergenIngredients.forEach { ingredient ->
@@ -50,8 +51,7 @@ class FoodStore(input: List<String>) {
         return foodsList.map { it.ingredients - allergenIngredients }.flatten()
     }
 
-    fun allergensSorted() =
-        allergens.toSortedMap(compareBy<Int> { dict.keyFromMappedValue(it) })
+    fun allergensSorted() = allergens.toSortedMap(compareBy<Int> { dict.keyFromMappedValue(it) })
 
     fun getItemName(mappedValue: Int) = dict.keyFromMappedValue(mappedValue)
 
