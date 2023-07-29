@@ -38,10 +38,8 @@ class FoodStore(input: List<String>) {
             // find any allergens that come from a known ingredient (the allergens that are contained in only one ingredient)
             // and remove these ingredients from the allergens that have more than one ingredient on their list
             val identifiedAllergenIngredients = allergens.values.filter { it.size == 1 }.flatten()
-            identifiedAllergenIngredients.forEach { ingredient ->
-                allergens.values.filter { it.size > 1 }.forEach { listOfIngredients ->
-                    listOfIngredients.remove(ingredient)
-                }
+            allergens.values.filter { it.size > 1 }.forEach { listOfIngredients ->
+                listOfIngredients.removeAll(identifiedAllergenIngredients)
             }
         }
     }
