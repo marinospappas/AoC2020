@@ -81,7 +81,7 @@ class Day21Test {
         puzzleSolver.solvePart1()   // must be executed to solve the puzzle first
         val res = puzzleSolver.solvePart2()
         println("Elapsed time: ${res.elapsedTime} ${res.timeUnit}")
-        assertThat(res.result).isEqualTo("")
+        assertThat(res.result).isEqualTo("mxmxvkd,sqjhc,fvjkl")
     }
 
 }
