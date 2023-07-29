@@ -32,7 +32,7 @@ class Day21: PuzzleSolver() {
             foodStore.identifyAllergenIngredients()
             result= foodStore.identifyNonAllergenIngredients().count()
         }
-        return PuzzlePartSolution(1, result.toString(), elapsed/1000, "micro-seconds")
+        return PuzzlePartSolution(1, result.toString(), elapsed/1000, "micro-sec")
     }
 
     override fun solvePart2(): PuzzlePartSolution {
@@ -40,6 +40,6 @@ class Day21: PuzzleSolver() {
         val elapsed = measureNanoTime {
             result = foodStore.allergens.toSortedMap().map { it.value.first() }.joinToString(",")
         }
-        return PuzzlePartSolution(2, result, elapsed/1000, "micro-seconds")
+        return PuzzlePartSolution(2, result, elapsed/1000, "micro-sec")
     }
 }
