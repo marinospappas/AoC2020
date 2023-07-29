@@ -6,7 +6,7 @@ class FoodStore(input: List<String>) {
 
     var foodsList: List<Food>
     val allergens= mutableMapOf<String,MutableSet<String>>()
-    var allIngredients: Set<String>
+    private var allIngredients: Set<String>
 
     init {
         foodsList = processInput(input)
@@ -16,9 +16,11 @@ class FoodStore(input: List<String>) {
 
     fun findAllergensFromFoods() {
         allergens.keys.forEach { allergen ->
+            // for each allergen find all the foods that contain it
+            // and then find the common ingredients that are contained in all these foods
             val foodsThatContainThisAllergen = foodsList.filter { it.allergens.contains(allergen) }
             val commonIngredients = foodsThatContainThisAllergen.map { it.ingredients }
-                .fold(allIngredients) { acc, ingr -> acc.intersect(ingr) }
+                .fold(allIngredients) { acc, ingredients -> acc.intersect(ingredients) }
             allergens[allergen] = commonIngredients.toMutableSet()
         }
     }
@@ -27,9 +29,13 @@ class FoodStore(input: List<String>) {
         if (allergens.values.none { it.size == 1 })
             throw AocException("could not identify any allergens")
         while (allergens.values.any { it.size > 1 }) {
+            // find any allergens that come from a known ingredient
+            // and remove these ingredients from the allergens that have more than one ingredient on their list
             val identifiedAllergenIngredients = allergens.values.filter { it.size == 1 }.flatten()
             identifiedAllergenIngredients.forEach { ingredient ->
-                allergens.values.filter { it.size > 1 }.forEach { listOfIngredients -> listOfIngredients.remove(ingredient) }
+                allergens.values.filter { it.size > 1 }.forEach { listOfIngredients ->
+                    listOfIngredients.remove(ingredient)
+                }
             }
         }
     }
@@ -38,7 +44,6 @@ class FoodStore(input: List<String>) {
         val allergenIngredients = allergens.values.map { it.first() }.toSet()
         return foodsList.map { it.ingredients - allergenIngredients }.flatten()
     }
-
 
     ///////////////////////////////////////////
 
