@@ -50,6 +50,9 @@ class Day22Test {
         while(deck.playRound())
             deck.print()
         deck.print()
+        println("winner: ${deck.getWinner()}")
+        val score = deck.getWinnersScore().also { println("score: $it") }
+        assertThat(score).isEqualTo(306)
     }
 
     @Test
@@ -57,7 +60,7 @@ class Day22Test {
     fun `Solves Part 1`() {
         val res = puzzleSolver.solvePart1()
         println("Elapsed time: ${res.elapsedTime} ${res.timeUnit}")
-        assertThat(res.result).isEqualTo("5")
+        assertThat(res.result).isEqualTo("306")
     }
 
     @Test

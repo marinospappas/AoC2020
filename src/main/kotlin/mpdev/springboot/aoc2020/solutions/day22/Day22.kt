@@ -16,16 +16,20 @@ class Day22: PuzzleSolver() {
         setDay()
     }
 
-    var result = 0
+    var result = 0L
+    lateinit var deck: DeckOfCards
 
     override fun initSolver(): Pair<Long,String> {
         val elapsed = measureNanoTime {
+            deck = DeckOfCards(inputData)
         }
         return Pair(elapsed/1000, "micro-sec")
     }
 
     override fun solvePart1(): PuzzlePartSolution {
         val elapsed = measureNanoTime {
+            while(deck.playRound()) {}
+            result = deck.getWinnersScore()
         }
         return PuzzlePartSolution(1, result.toString(), elapsed/1000, "micro-sec")
     }

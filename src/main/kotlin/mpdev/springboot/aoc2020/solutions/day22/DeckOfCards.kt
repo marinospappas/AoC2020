@@ -14,9 +14,21 @@ class DeckOfCards(input: List<String>) {
     fun playRound(): Boolean {
         ++round
         val cards = IntArray(2) { player[it].removeFirst() }
-        val i = if (cards[0] > cards[1]) 0 else 1
+        val i = cards.indexOf(cards.max())
         player[i].addAll(cards.toList().sorted().reversed())
         return player.none { it.isEmpty() }
+    }
+
+    fun getWinner() =
+        if (player.none { it.isEmpty() }) -1
+        else player.indexOf(player.first { it.isNotEmpty() }) + 1
+
+    fun getWinnersScore(): Long {
+        var winnerIndex: Int
+        if ((getWinner() - 1).also { winnerIndex = it } < 0)
+            return -1
+        return player[winnerIndex].indices
+            .sumOf { player[winnerIndex][it] * (player[winnerIndex].size - it) }.toLong()
     }
 
     ///////////////////////////////////////////
