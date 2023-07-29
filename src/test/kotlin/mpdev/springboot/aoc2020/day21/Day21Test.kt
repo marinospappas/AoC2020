@@ -36,7 +36,7 @@ class Day21Test {
     fun `Reads Input and Sets up Foods List`() {
         val foodStore = FoodStore(inputLines)
         foodStore.foodsList.forEach { println(it) }
-        println("allergens: ${foodStore.allergens.keys}")
+        println("allergens: ${foodStore.allergens.keys.map{ FoodStore.dict.keyFromMappedValue(it) }}")
         println("*** additional info")
         println("number of items in food list: ${foodStore.foodsList.size}")
         println("max number of ingredients in any food: ${foodStore.foodsList.maxOf { it.ingredients.size }}")
@@ -54,17 +54,23 @@ class Day21Test {
         val foodStore = FoodStore(inputLines)
         println("* find allergens")
         foodStore.findAllergensFromFoods()
-        foodStore.allergens.forEach { println(it) }
+        foodStore.allergens.forEach { e ->
+            println("${FoodStore.dict.keyFromMappedValue(e.key)}: ${e.value.map { FoodStore.dict.keyFromMappedValue(it) }}")
+        }
         println("* identify allergen ingredients")
         foodStore.identifyAllergenIngredients()
-        foodStore.allergens.forEach { println(it) }
+        foodStore.allergens.forEach { e ->
+            println("${FoodStore.dict.keyFromMappedValue(e.key)}: ${e.value.map { FoodStore.dict.keyFromMappedValue(it) }}")
+        }
         println("* identify non allergen ingredients")
-        val nonAllergens = foodStore.identifyNonAllergenIngredients().also { println(it) }
+        val nonAllergens = foodStore.identifyNonAllergenIngredients().also {
+            println(it.map { i -> FoodStore.dict.keyFromMappedValue(i) })
+        }
         assertThat(nonAllergens.size).isEqualTo(5)
-        assertThat(nonAllergens.count { it == "sbzzf" }).isEqualTo(2)
-        assertThat(nonAllergens.count { it == "kfcds" }).isEqualTo(1)
-        assertThat(nonAllergens.count { it == "nhms" }).isEqualTo(1)
-        assertThat(nonAllergens.count { it == "trh" }).isEqualTo(1)
+        assertThat(nonAllergens.count { it == FoodStore.dict.get("sbzzf") }).isEqualTo(2)
+        assertThat(nonAllergens.count { it == FoodStore.dict.get("kfcds") }).isEqualTo(1)
+        assertThat(nonAllergens.count { it == FoodStore.dict.get("nhms") }).isEqualTo(1)
+        assertThat(nonAllergens.count { it == FoodStore.dict.get("trh") }).isEqualTo(1)
     }
 
     @Test

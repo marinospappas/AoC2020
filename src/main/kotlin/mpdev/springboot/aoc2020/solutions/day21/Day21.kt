@@ -38,7 +38,8 @@ class Day21: PuzzleSolver() {
     override fun solvePart2(): PuzzlePartSolution {
         var result: String
         val elapsed = measureNanoTime {
-            result = foodStore.allergens.toSortedMap().map { it.value.first() }.joinToString(",")
+            result = foodStore.allergensSorted().values
+                .map { foodStore.getItemName(it.first()) }.joinToString(",")
         }
         return PuzzlePartSolution(2, result, elapsed/1000, "micro-sec")
     }

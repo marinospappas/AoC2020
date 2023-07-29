@@ -1,12 +1,17 @@
 package mpdev.springboot.aoc2020.solutions.day21
 
 import mpdev.springboot.aoc2020.utils.AocException
+import mpdev.springboot.aoc2020.utils.Dictionary
 
 class FoodStore(input: List<String>) {
 
+    companion object {
+        val dict = Dictionary()
+    }
+
     var foodsList: List<Food>
-    val allergens= mutableMapOf<String,MutableSet<String>>()
-    private var allIngredients: Set<String>
+    val allergens= mutableMapOf<Int,MutableSet<Int>>()
+    private var allIngredients: Set<Int>
 
     init {
         foodsList = processInput(input)
@@ -40,10 +45,15 @@ class FoodStore(input: List<String>) {
         }
     }
 
-    fun identifyNonAllergenIngredients(): List<String> {
+    fun identifyNonAllergenIngredients(): List<Int> {
         val allergenIngredients = allergens.values.map { it.first() }.toSet()
         return foodsList.map { it.ingredients - allergenIngredients }.flatten()
     }
+
+    fun allergensSorted() =
+        allergens.toSortedMap(compareBy<Int> { dict.keyFromMappedValue(it) })
+
+    fun getItemName(mappedValue: Int) = dict.keyFromMappedValue(mappedValue)
 
     ///////////////////////////////////////////
 
@@ -53,8 +63,10 @@ class FoodStore(input: List<String>) {
             try {
                 // mxmxvkd kfcds sqjhc nhms (contains dairy, fish)
                 val (ingredients, allergens) = Regex("""(.+) \(contains (.+)\)""").find(line)!!.destructured
-                val ingredientsList = ingredients.split(" ").toSet()
-                val allergensList = allergens.replace(" ", "").split(",").toSet()
+                val ingredientsList = ingredients.split(" ")
+                    .map { dict.get(it) }.toSet()
+                val allergensList = allergens.replace(" ", "").split(",")
+                    .map { dict.get(it) }.toSet()
                 processedList.add(Food(ingredientsList, allergensList))
             }
             catch (e: Exception) {
@@ -66,4 +78,8 @@ class FoodStore(input: List<String>) {
     }
 }
 
-data class Food(val ingredients: Set<String>, val allergens: Set<String>)
+data class Food(val ingredients: Set<Int>, val allergens: Set<Int>) {
+    override fun toString() =
+        "Food: Ingredients=${ingredients.map{FoodStore.dict.keyFromMappedValue(it)}}, " +
+                "Allergens=${allergens.map{FoodStore.dict.keyFromMappedValue(it)}}"
+}
