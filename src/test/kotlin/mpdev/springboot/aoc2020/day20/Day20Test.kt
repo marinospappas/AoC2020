@@ -75,7 +75,7 @@ class Day20Test {
 
     @Test
     @Order(4)
-    fun `Rotates tile horizontally and vertically`() {
+    fun `Rotates tile 1, 2, 3 times`() {
         val jigsaw = JigsawSolver(inputLines)
         val tile = jigsaw.tiles.entries.first().value
         tile.print()
