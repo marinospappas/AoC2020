@@ -47,7 +47,7 @@ class Day22Test {
     fun `Plays rounds and identifies the winner of each round`() {
         val deck = DeckOfCards(inputLines)
         deck.print()
-        while(deck.playRound())
+        while(deck.playRoundSimpleDeck())
             deck.print()
         deck.print()
         println("winner: ${deck.getWinner()}")
@@ -64,11 +64,24 @@ class Day22Test {
     }
 
     @Test
+    @Order(7)
+    fun `Plays Recursive rounds and identies winner`() {
+        val deck = DeckOfCards(inputLines)
+        while(deck.playRoundRecursiveDeck()) {
+            println("Game #${deck.gameId}")
+            deck.print()
+        }
+        deck.print()
+        println("winner: ${deck.getWinner()}")
+        val score = deck.getWinnersScore().also { println("score: $it") }
+        assertThat(score).isEqualTo(291)
+    }
+
+    @Test
     @Order(9)
     fun `Solves Part 2`() {
-        puzzleSolver.solvePart1()   // must be executed to solve the puzzle first
         val res = puzzleSolver.solvePart2()
         println("Elapsed time: ${res.elapsedTime} ${res.timeUnit}")
-        assertThat(res.result).isEqualTo("mxmxvkd,sqjhc,fvjkl")
+        assertThat(res.result).isEqualTo("291")
     }
 }
