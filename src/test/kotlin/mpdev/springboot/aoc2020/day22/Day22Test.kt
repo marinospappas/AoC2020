@@ -36,10 +36,10 @@ class Day22Test {
     fun `Reads Input and Sets up Deck and Players`() {
         val deck = DeckOfCards(inputLines)
         deck.print()
-        assertThat(deck.player[0].size).isEqualTo(5)
-        assertThat(deck.player[1].size).isEqualTo(5)
-        assertThat(deck.player[0].sum()).isEqualTo(21)
-        assertThat(deck.player[1].sum()).isEqualTo(34)
+        assertThat(deck.player[0].numberOfCards()).isEqualTo(5)
+        assertThat(deck.player[1].numberOfCards()).isEqualTo(5)
+        assertThat(deck.player[0].getCards().sum()).isEqualTo(21)
+        assertThat(deck.player[1].getCards().sum()).isEqualTo(34)
     }
 
     @Test

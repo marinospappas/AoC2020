@@ -4,20 +4,20 @@ import mpdev.springboot.aoc2020.utils.AocException
 
 class DeckOfCards(input: List<String>) {
 
-    constructor(player: Array<MutableList<Int>>, gameId: Int): this(emptyList()) {
-        this.player = player
+    constructor(playerCards: Array<MutableList<Int>>, gameId: Int): this(emptyList()) {
+        this.player = Array(2) { Player(playerCards[it]) }
         this.gameId = gameId
     }
 
-    lateinit var player: Array<MutableList<Int>>
+    lateinit var player: Array<Player>
     var round = 0
-    val previousRounds = mutableMapOf<Int, Pair<List<Int>,List<Int>>>()
+    val previousRounds = mutableMapOf<Int, Pair<Player,Player>>()
     var gameId = 0
 
     init {
         if (input.isNotEmpty()) {
             gameId = 1
-            player = Array(2) { mutableListOf() }
+            player = Array(2) { Player() }
             processInput(input)
         }
     }
@@ -25,44 +25,44 @@ class DeckOfCards(input: List<String>) {
     // part 1
     fun playRoundSimpleDeck(): Boolean {
         ++round
-        val cards = IntArray(2) { player[it].removeFirst() }
-        val i = cards.indexOf(cards.max())
-        player[i].addAll(cards.toList().sorted().reversed())
-        return player.none { it.isEmpty() }
+        val cards = IntArray(2) { player[it].dealCard() }
+        val winner = cards.indexOf(cards.max())
+        val loser = (winner + 1) % 2
+        player[winner].takeCard(cards[winner]).takeCard(cards[loser])
+        return player.none { it.hasNoCards() }
     }
 
     // part 2
     fun playRoundRecursiveDeck(): Boolean {
         ++round
         if (previousRounds.values.contains(Pair(player[0],player[1]))) {
-            player[1].clear()
+            player[1].loses()
             return false
         }
-        previousRounds[round] = Pair(player[0].toList(), player[1].toList())
-        val cards = IntArray(2) { player[it].removeFirst() }
+        previousRounds[round] = Pair(Player(player[0].getCards().toMutableList()), Player(player[1].getCards().toMutableList()))
+        val cards = IntArray(2) { player[it].dealCard() }
         val winner =
-            if (player.indices.all { i -> player[i].size >= cards[i] }) {
-                val newHand = Array(2) { player[it].subList(0, cards[it]).toMutableList() }
+            if (player.indices.all { i -> player[i].numberOfCards() >= cards[i] }) {
+                val newHand = Array(2) { player[it].sublistNCards(cards[it]).toMutableList() }
                 val newDeck = DeckOfCards(newHand, gameId + 1)
                 while (newDeck.playRoundRecursiveDeck()) {}
                 newDeck.getWinner() - 1
             } else
                 cards.indexOf(cards.max())
         val loser = (winner + 1) % 2
-        player[winner].addAll(listOf(cards[winner], cards[loser]))
-        return player.none { it.isEmpty() }
+        player[winner].takeCard(cards[winner]).takeCard(cards[loser])
+        return player.none { it.hasNoCards() }
     }
 
     fun getWinner() =
-        if (player.none { it.isEmpty() }) -1
-        else player.indexOf(player.first { it.isNotEmpty() }) + 1
+        if (player.none { it.hasNoCards() }) -1
+        else player.indexOf(player.first { !it.hasNoCards() }) + 1
 
     fun getWinnersScore(): Int {
         var winnerIndex: Int
         if ((getWinner() - 1).also { winnerIndex = it } < 0)
             return -1
-        return player[winnerIndex].indices
-            .sumOf { player[winnerIndex][it] * (player[winnerIndex].size - it) }
+        return player[winnerIndex].getScore()
     }
 
     ///////////////////////////////////////////
@@ -93,7 +93,7 @@ class DeckOfCards(input: List<String>) {
                         playerIndx = indexStr.toInt() - 1
                     }
                     line.isEmpty() -> {}
-                    else -> player[playerIndx].add(line.toInt())
+                    else -> player[playerIndx].takeCard(line.toInt())
                 }
             }
             catch (e: Exception) {
