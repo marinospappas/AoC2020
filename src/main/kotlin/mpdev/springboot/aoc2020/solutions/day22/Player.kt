@@ -22,7 +22,7 @@ data class Player(private val cards: MutableList<Int> = mutableListOf()) {
     fun getScore() =
         cards.indices.sumOf { cards[it] * (cards.size - it) }
 
-    fun getCards() = cards
+    fun getCards() = cards.toList()
 
     override fun toString() = cards.toString()
 }
