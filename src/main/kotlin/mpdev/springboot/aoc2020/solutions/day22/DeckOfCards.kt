@@ -1,17 +1,18 @@
 package mpdev.springboot.aoc2020.solutions.day22
 
 import mpdev.springboot.aoc2020.utils.AocException
+import java.math.BigInteger
 
 class DeckOfCards(input: List<String>) {
 
-    constructor(playerCards: Array<MutableList<Int>>, gameId: Int): this(emptyList()) {
+    constructor(playerCards: Array<BigInteger>, gameId: Int): this(emptyList()) {
         this.player = Array(2) { Player(playerCards[it]) }
         this.gameId = gameId
     }
 
     lateinit var player: Array<Player>
     var round = 0
-    val previousRounds = mutableMapOf<Int, Pair<List<Int>,List<Int>>>()
+    private val previousRounds = mutableSetOf<Pair<BigInteger,BigInteger>>()
     var gameId = 0
 
     init {
@@ -35,15 +36,15 @@ class DeckOfCards(input: List<String>) {
     // part 2
     fun playRoundRecursiveDeck(): Boolean {
         ++round
-        if (previousRounds.values.contains(Pair(player[0].getCards(),player[1].getCards()))) {
+        if (previousRounds.contains(Pair(player[0].getCards(), player[1].getCards()))) {
             player[1].loses()
             return false
         }
-        previousRounds[round] = Pair(player[0].getCards(), player[1].getCards())
+        previousRounds.add(Pair(player[0].getCards(), player[1].getCards()))
         val cards = IntArray(2) { player[it].dealCard() }
         val winner =
             if (player.indices.all { i -> player[i].numberOfCards() >= cards[i] }) {
-                val newHand = Array(2) { player[it].sublistNCards(cards[it]).toMutableList() }
+                val newHand = Array(2) { player[it].sublistNCards(cards[it]) }
                 val newDeck = DeckOfCards(newHand, gameId + 1)
                 while (newDeck.playRoundRecursiveDeck()) {}
                 newDeck.getWinner() - 1

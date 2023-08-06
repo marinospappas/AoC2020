@@ -3,11 +3,13 @@ package mpdev.springboot.aoc2020.day22
 import mpdev.springboot.aoc2020.input.InputDataReader
 import mpdev.springboot.aoc2020.solutions.day22.Day22
 import mpdev.springboot.aoc2020.solutions.day22.DeckOfCards
+import mpdev.springboot.aoc2020.solutions.day22.Player
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import java.math.BigInteger
 
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -38,8 +40,8 @@ class Day22Test {
         deck.print()
         assertThat(deck.player[0].numberOfCards()).isEqualTo(5)
         assertThat(deck.player[1].numberOfCards()).isEqualTo(5)
-        assertThat(deck.player[0].getCards().sum()).isEqualTo(21)
-        assertThat(deck.player[1].getCards().sum()).isEqualTo(34)
+        assertThat(deck.player[0].cardsToList().sum()).isEqualTo(21)
+        assertThat(deck.player[1].cardsToList().sum()).isEqualTo(34)
     }
 
     @Test
@@ -65,12 +67,30 @@ class Day22Test {
 
     @Test
     @Order(7)
+    fun `Player cards are updated correctly`() {
+        var player = Player()
+        player.takeCard(1).takeCard(2).takeCard(3).takeCard(4)
+        assertThat(player.numberOfCards()).isEqualTo(4)
+        assertThat(player.cardsToList()).isEqualTo(listOf(1,2,3,4))
+        assertThat(player.getCards()).isEqualTo(BigInteger.valueOf(16_777_216L * 4 + 65536 * 3 + 256 * 2 + 1))
+
+        player = Player(BigInteger.valueOf(16_777_216L * 4 + 65536 * 3 + 256 * 2 + 1))
+        assertThat(player.numberOfCards()).isEqualTo(4)
+        assertThat(player.cardsToList()).isEqualTo(listOf(1,2,3,4))
+
+        val cardsSublist = player.sublistNCards(2)
+        assertThat(cardsSublist).isEqualTo(BigInteger.valueOf(256 * 2 + 1))
+    }
+
+    @Test
+    @Order(8)
     fun `Plays Recursive rounds and identies winner`() {
         val deck = DeckOfCards(inputLines)
         while(deck.playRoundRecursiveDeck()) {
             println("Game #${deck.gameId}")
             deck.print()
         }
+        println("Game #${deck.gameId}")
         deck.print()
         println("winner: ${deck.getWinner()}")
         val score = deck.getWinnersScore().also { println("score: $it") }

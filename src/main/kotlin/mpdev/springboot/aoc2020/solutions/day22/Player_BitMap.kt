@@ -2,7 +2,7 @@ package mpdev.springboot.aoc2020.solutions.day22
 
 import java.math.BigInteger
 
-data class Player(private var cards: BigInteger = BigInteger.ZERO) {
+data class Player_BitMap(private var cards: BigInteger = BigInteger.ZERO) {
 
     companion object {
         const val BITS_PER_CARD = 8
@@ -18,7 +18,7 @@ data class Player(private var cards: BigInteger = BigInteger.ZERO) {
         }
     }
 
-    fun takeCard(card: Int): Player {
+    fun takeCard(card: Int): Player_BitMap {
         val newCard = BigInteger.valueOf(card.toLong()).shiftLeft(cardIndex * BITS_PER_CARD)
         cards = cards.or(newCard)
         ++cardIndex
