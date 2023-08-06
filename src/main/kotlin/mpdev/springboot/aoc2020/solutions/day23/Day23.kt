@@ -40,14 +40,15 @@ class Day23: PuzzleSolver() {
     override fun solvePart2(): PuzzlePartSolution {
         val elapsed = measureTimeMillis {
             rotatingCups = RotatingCups(inputData, 2)
-            //log.info("part 2, initial cups setup: {} ...", rotatingCups.toString().substring(0, 50))
+            log.info("part 2, initial cups setup: {} ...", rotatingCups.toString(30))
             repeat(10_000_000) {
                 if ((it+1) % 1_000_000 == 0)
                     log.info("round ${it+1}")
                 rotatingCups.playRound()
             }
         }
-        val cupsList = rotatingCups.cupsToList(1)
+        log.info("part 2, final cups setup: {} ...", rotatingCups.toString(30))
+        val cupsList = rotatingCups.cupsToList(1, 10)
         result = (cupsList[1].toLong() * cupsList[2].toLong()).toString()
         return PuzzlePartSolution(2, result, elapsed)
     }

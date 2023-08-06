@@ -3,7 +3,6 @@ package mpdev.springboot.aoc2020.day23
 import mpdev.springboot.aoc2020.input.InputDataReader
 import mpdev.springboot.aoc2020.solutions.day23.Day23
 import mpdev.springboot.aoc2020.solutions.day23.RotatingCups
-import mpdev.springboot.aoc2020.utils.AocException
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.*
 
@@ -38,6 +37,7 @@ class Day23Test {
         assertThat(rotatingCups.maxCupId).isEqualTo(9)
         println("current cup: ${rotatingCups.current}")
         assertThat(rotatingCups.current.id).isEqualTo(3)
+        assertThat(rotatingCups.cupsMap.size).isEqualTo(10)
         println("cups list")
         println(rotatingCups.getCup(3))
         println(rotatingCups.getCup(8))
@@ -57,7 +57,6 @@ class Day23Test {
         assertThat(rotatingCups.getCup(4).next.id).isEqualTo(6)
         assertThat(rotatingCups.getCup(6).next.id).isEqualTo(7)
         assertThat(rotatingCups.getCup(7).next.id).isEqualTo(3)
-        assertThrows<AocException> { rotatingCups.getCup(10) }
     }
 
     @Test
@@ -82,10 +81,48 @@ class Day23Test {
     }
 
     @Test
+    @Order(7)
+    fun `Sets up Rotating Cups for Part 2`() {
+        val rotatingCups = RotatingCups(inputLines, 2)
+        println(rotatingCups.toString(20))
+        assertThat(rotatingCups.size).isEqualTo(1_000_000)
+        assertThat(rotatingCups.maxCupId).isEqualTo(1_000_000)
+        println("current cup: ${rotatingCups.current}")
+        assertThat(rotatingCups.current.id).isEqualTo(3)
+        assertThat(rotatingCups.cupsMap.size).isEqualTo(1_000_001)
+        println("cups list")
+        println(rotatingCups.getCup(3))
+        println(rotatingCups.getCup(8))
+        println(rotatingCups.getCup(9))
+        println(rotatingCups.getCup(1))
+        println(rotatingCups.getCup(2))
+        println(rotatingCups.getCup(5))
+        println(rotatingCups.getCup(4))
+        println(rotatingCups.getCup(6))
+        println(rotatingCups.getCup(7))
+        println(rotatingCups.getCup(10))
+        println(rotatingCups.getCup(1_000_000))
+        assertThat(rotatingCups.getCup(3).next.id).isEqualTo(8)
+        assertThat(rotatingCups.getCup(8).next.id).isEqualTo(9)
+        assertThat(rotatingCups.getCup(9).next.id).isEqualTo(1)
+        assertThat(rotatingCups.getCup(1).next.id).isEqualTo(2)
+        assertThat(rotatingCups.getCup(2).next.id).isEqualTo(5)
+        assertThat(rotatingCups.getCup(5).next.id).isEqualTo(4)
+        assertThat(rotatingCups.getCup(4).next.id).isEqualTo(6)
+        assertThat(rotatingCups.getCup(6).next.id).isEqualTo(7)
+        assertThat(rotatingCups.getCup(7).next.id).isEqualTo(10)
+        assertThat(rotatingCups.getCup(10).next.id).isEqualTo(11)
+        assertThat(rotatingCups.getCup(1_000_000).next.id).isEqualTo(3)
+    }
+
+    @Test
     @Order(9)
     fun `Solves Part 2`() {
         val res = puzzleSolver.solvePart2()
         println("Elapsed time: ${res.elapsedTime} ${res.timeUnit}")
         assertThat(res.result).isEqualTo("149245887792")
+        val cupsList = puzzleSolver.rotatingCups.cupsToList(1,3)
+        assertThat(cupsList[1]).isEqualTo(934001)
+        assertThat(cupsList[2]).isEqualTo(159792)
     }
 }
