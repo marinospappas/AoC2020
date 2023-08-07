@@ -134,7 +134,7 @@ class JigsawSolver(input: List<String>) {
             val grid = Transformation.apply(
                 tilesNoBorders[transformedTile.tileId]!!, transformedTile.transformedState, tileSize - 2, tileSize - 2
             )
-            grid.getData().forEach { jigsawData[Point(it.key.x + offsX, it.key.y + offsY)] = it.value }
+            grid.getDataPoints().forEach { jigsawData[Point(it.key.x + offsX, it.key.y + offsY)] = it.value }
         }
         return Grid(jigsawData, TilePixel.mapper)
     }
@@ -152,12 +152,12 @@ class JigsawSolver(input: List<String>) {
         var found = false
         val picSize = picture.getDimensions().first
         val shapeLength = shape.getDimensions().first
-        picture.getData()
+        picture.getDataPoints()
             .filter { it.key.y > 1 && it.key.y < picSize - 2 && it.key.x < picSize - shapeLength }
             .forEach { picEntry ->
                 val xOffs = picEntry.key.x
                 val yOffs = picEntry.key.y - 1
-                val dataToMatch = shape.getData().keys.map { Point(it.x + xOffs, it.y + yOffs) }.toSet()
+                val dataToMatch = shape.getDataPoints().keys.map { Point(it.x + xOffs, it.y + yOffs) }.toSet()
             if (dataToMatch.none { picture.getDataPoint(it) == null }) {
                     dataToMatch.forEach { point -> picture.setDataPoint(point, TilePixel.MONSTER) }
                     found = true
@@ -172,7 +172,7 @@ class JigsawSolver(input: List<String>) {
         val tilesWithoutBorders = mutableMapOf<Int, Grid<TilePixel>>()
         tiles.forEach { tile ->
             tilesWithoutBorders[tile.key] =
-                Grid(tile.value.getData().filter { it.key.x != 0 && it.key.y != 0 && it.key.x != tileSize-1 && it.key.y != tileSize-1 }
+                Grid(tile.value.getDataPoints().filter { it.key.x != 0 && it.key.y != 0 && it.key.x != tileSize-1 && it.key.y != tileSize-1 }
                     .mapKeys { Point(it.key.x-1, it.key.y-1) }, TilePixel.mapper)
         }
         return tilesWithoutBorders

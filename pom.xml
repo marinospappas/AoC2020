@@ -172,7 +172,8 @@
 					<args>
 						<arg>-Xjsr305=strict</arg>
 					</args>
-				</configuration>
+                    <languageVersion>1.9</languageVersion>
+                </configuration>
 				<dependencies>
 					<dependency>
 						<groupId>org.jetbrains.kotlin</groupId>

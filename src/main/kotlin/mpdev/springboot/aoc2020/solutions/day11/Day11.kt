@@ -54,11 +54,11 @@ class Day11: PuzzleSolver() {
         var prevSeating = mapOf<Point,Seat>()
         for (i in (1..MAX_LOOP)) {
             seatplan.adjustSeating(findOccupied, minOccupied)
-            if (seatplan.grid.getData() == prevSeating) {
+            if (seatplan.grid.getDataPoints() == prevSeating) {
                 log.info("number of iterations: $i")
                 return seatplan.countOf(Seat.OCCUPIED)
             }
-            prevSeating = seatplan.grid.getData()
+            prevSeating = seatplan.grid.getDataPoints()
         }
         throw AocException("reached max iteration limit")
     }

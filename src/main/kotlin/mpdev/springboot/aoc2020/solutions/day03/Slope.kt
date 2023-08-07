@@ -20,7 +20,7 @@ class Slope(val input: List<String>) {
         var encountered = 0
         while (current.y < maxY) {
             current += step
-            if (grid.getData().getExtended(current) == SlopePoint.TREE)
+            if (grid.getDataPoints().getExtended(current) == SlopePoint.TREE)
                 ++encountered
         }
         return encountered

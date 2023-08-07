@@ -4,34 +4,43 @@ import java.awt.Point
 
 open class Grid<T>(input: List<String> = emptyList(), private val mapper: Map<Char,T>) {
 
-    private var data = mutableMapOf<Point,T>()
-    private var maxX: Int = 0
-    private var maxY: Int = 0
-    private var minX: Int = 0
-    private var minY: Int = 0
+    protected var data = mutableMapOf<Point,T>()
+    protected var maxX: Int = 0
+    protected var maxY: Int = 0
+    protected var minX: Int = 0
+    protected var minY: Int = 0
 
     init {
         if (input.isNotEmpty()) {
             processInput(input)
-            maxX = data.keys.maxOf { it.x }
-            maxY = data.keys.maxOf { it.y }
+            updateXYDimensions()
         }
     }
 
     constructor(gridData: Map<Point,T>,  mapper: Map<Char,T>): this(mapper = mapper) {
         data = gridData.toMutableMap()
-        maxX = data.keys.maxOf { it.x }
-        maxY = data.keys.maxOf { it.y }
+        updateXYDimensions()
     }
 
-    open fun getData() = data.toMap()
+    private fun updateXYDimensions() {
+        maxX = data.keys.maxOf { it.x }
+        maxY = data.keys.maxOf { it.y }
+        minX = data.keys.minOf { it.x }
+        minY = data.keys.minOf { it.y }
+    }
+
+    fun getDataPoints() = data.toMap()
     open fun getDataPoint(p: Point) = data[p]
     open fun setDataPoint(p: Point, t: T) {
         data[p] = t
     }
 
-    open fun getDimensions() = Pair(maxX-minX+1, maxY-minY+1)
-    open fun countOf(item: T) = data.values.count { it == item }
+    fun getDimensions() = Pair(maxX-minX+1, maxY-minY+1)
+    fun countOf(item: T) = data.values.count { it == item }
+
+    open fun updateDimensions() {
+       updateXYDimensions()
+    }
 
     // mapping of a column or a row to int by interpreting the co-ordinates as bit positions
     fun mapRowToInt(n: Int, predicate: (T) -> Boolean = { true }) =
@@ -59,18 +68,18 @@ open class Grid<T>(input: List<String> = emptyList(), private val mapper: Map<Ch
     }
 
     private fun data2Grid(): Array<CharArray> {
-        val grid: Array<CharArray> = Array(maxY+1) { CharArray(maxX+1) { DEFAULT_CHAR } }
-        data.forEach { (pos, item) -> grid[pos.y][pos.x] = map2Char(item) }
+        val grid: Array<CharArray> = Array(maxY-minY+1) { CharArray(maxX-minX+1) { DEFAULT_CHAR } }
+        data.forEach { (pos, item) -> grid[pos.y - minY][pos.x - minX] = map2Char(item) }
         return grid
     }
 
-    private fun map2Char(t: T) = mapper.entries.first { e -> e.value == t }.key
+    protected fun map2Char(t: T) = mapper.entries.first { e -> e.value == t }.key
 
     open fun print() {
         printGrid(data2Grid())
     }
 
-    private fun printGrid(grid: Array<CharArray>) {
+    protected fun printGrid(grid: Array<CharArray>) {
         for (i in grid.indices) {
             print("${String.format("%2d",i)} ")
             for (j in grid.first().indices)

@@ -40,7 +40,7 @@ class SeatPlan(val input: List<String>) {
     }
 
     fun adjustSeating(findOccupied: (Map<Point,Seat>, Point) -> Int, minOccupied: Int) {
-        val currentSeating = grid.getData().toMap()
+        val currentSeating = grid.getDataPoints().toMap()
         currentSeating.forEach { seat ->
             when (findOccupied(currentSeating, seat.key)) {
                 0 -> if (grid.getDataPoint(seat.key) == Seat.EMPTY)

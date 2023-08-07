@@ -32,7 +32,7 @@ enum class Transformation(private val value: String) {
 
         fun apply(tile: Grid<TilePixel>, transformation: Transformation, sizeX: Int, sizeY: Int): Grid<TilePixel> =
             when (transformation) {
-                AS_IS -> Grid(tile.getData(), TilePixel.mapper)
+                AS_IS -> Grid(tile.getDataPoints(), TilePixel.mapper)
                 ROTATE_1, ROTATE_2, ROTATE_3 -> rotate(tile, transformation.value.toInt(), sizeX, sizeY)
                 FLIP_H, FLIP_V -> flip(tile, transformation.value, sizeX, sizeY)
                 ROTATE_1_FLIP_H -> flip( rotate(tile, 1, sizeX, sizeY), FLIP_H.value, sizeX, sizeY )
@@ -41,16 +41,16 @@ enum class Transformation(private val value: String) {
 
         private fun rotate(tile: Grid<TilePixel>, factor: Int, sizeX: Int, sizeY: Int): Grid<TilePixel> {
             return when (factor) {
-                1 -> Grid(tile.getData().mapKeys { entry -> Point(sizeX-1 - entry.key.y, entry.key.x) }, TilePixel.mapper)
-                2 -> Grid(tile.getData().mapKeys { entry -> Point(sizeX-1 - entry.key.x, sizeY-1 - entry.key.y) }, TilePixel.mapper)
-                3 -> Grid(tile.getData().mapKeys { entry -> Point(entry.key.y, sizeY-1 - entry.key.x) }, TilePixel.mapper)
+                1 -> Grid(tile.getDataPoints().mapKeys { entry -> Point(sizeX-1 - entry.key.y, entry.key.x) }, TilePixel.mapper)
+                2 -> Grid(tile.getDataPoints().mapKeys { entry -> Point(sizeX-1 - entry.key.x, sizeY-1 - entry.key.y) }, TilePixel.mapper)
+                3 -> Grid(tile.getDataPoints().mapKeys { entry -> Point(entry.key.y, sizeY-1 - entry.key.x) }, TilePixel.mapper)
                 else -> throw AocException("error in rotate($factor)")
             }
         }
         private fun flip(tile: Grid<TilePixel>, factor: String, sizeX: Int, sizeY: Int): Grid<TilePixel> {
             return when (factor) {
-                "V" -> Grid(tile.getData().mapKeys { entry -> Point(sizeX-1 - entry.key.x, entry.key.y) }, TilePixel.mapper)
-                "H" -> Grid(tile.getData().mapKeys { entry -> Point(entry.key.x, sizeY-1 - entry.key.y) }, TilePixel.mapper)
+                "V" -> Grid(tile.getDataPoints().mapKeys { entry -> Point(sizeX-1 - entry.key.x, entry.key.y) }, TilePixel.mapper)
+                "H" -> Grid(tile.getDataPoints().mapKeys { entry -> Point(entry.key.x, sizeY-1 - entry.key.y) }, TilePixel.mapper)
                 else -> throw AocException("error in flip($factor)")
             }
         }

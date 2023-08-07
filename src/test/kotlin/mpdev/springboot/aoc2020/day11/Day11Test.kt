@@ -38,7 +38,7 @@ class Day11Test {
         seatplan.printSeatPlan()
         assertThat(seatplan.maxX).isEqualTo(10)
         assertThat(seatplan.maxY).isEqualTo(10)
-        assertThat(seatplan.grid.getData().size).isEqualTo(100)
+        assertThat(seatplan.grid.getDataPoints().size).isEqualTo(100)
         assertThat(seatplan.grid.countOf(Seat.EMPTY)).isEqualTo(71)
         assertThat(seatplan.grid.countOf(Seat.FLOOR)).isEqualTo(29)
     }
@@ -72,12 +72,12 @@ class Day11Test {
         val seatplan = SeatPlan(inputLines)
         seatplan.printSeatPlan()
         assertThat(seatplan.countOf(Seat.EMPTY)).isEqualTo(71)
-        var previousSeating = seatplan.grid.getData()
+        var previousSeating = seatplan.grid.getDataPoints()
         for (i in (1..6)) {
             println("$i")
             seatplan.adjustSeating({ s, p -> seatplan.getAdjacentOccupiedPart2(s, p) }, 5)
             seatplan.printSeatPlan()
-            previousSeating = seatplan.grid.getData()
+            previousSeating = seatplan.grid.getDataPoints()
         }
         assertThat(seatplan.countOf(Seat.OCCUPIED)).isEqualTo(26)
         assertThat(previousSeating.count { it.value == Seat.OCCUPIED }).isEqualTo(26)

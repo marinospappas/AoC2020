@@ -52,7 +52,7 @@ class Day20Test {
         assertTrue(jigsaw.tilesNoBorders.values.all{ it.getDimensions() == Pair(8,8) })
         jigsaw.shapeToMatch.print()
         assertThat(jigsaw.shapeToMatch.getDimensions()).isEqualTo(Pair(20,3))
-        assertThat(jigsaw.shapeToMatch.getData().size).isEqualTo(15)
+        assertThat(jigsaw.shapeToMatch.getDataPoints().size).isEqualTo(15)
     }
 
     @Test
@@ -61,15 +61,15 @@ class Day20Test {
         val jigsaw = JigsawSolver(inputLines)
         val tile = jigsaw.tiles.entries.first().value
         tile.print()
-        val left = tile.getData().keys.filter { it.x == 0 }.map { it.y }
-        val bottom = tile.getData().keys.filter { it.y == 9 }.map { it.x }
+        val left = tile.getDataPoints().keys.filter { it.x == 0 }.map { it.y }
+        val bottom = tile.getDataPoints().keys.filter { it.y == 9 }.map { it.x }
         println("\nFlip vertically")
         val flippedV = Transformation.apply(tile, Transformation.FLIP_V, 10, 10).also { it.print() }
-        val right = flippedV.getData().keys.filter { it.x == 9 }.map { it.y }
+        val right = flippedV.getDataPoints().keys.filter { it.x == 9 }.map { it.y }
         assertThat(left).isEqualTo(right)
         println("\nFlip horizontally")
         val flippedH = Transformation.apply(tile, Transformation.FLIP_H, 10, 10).also { it.print() }
-        val top = flippedH.getData().keys.filter { it.y == 0 }.map { it.x }
+        val top = flippedH.getDataPoints().keys.filter { it.y == 0 }.map { it.x }
         assertThat(bottom).isEqualTo(top)
     }
 
@@ -79,18 +79,18 @@ class Day20Test {
         val jigsaw = JigsawSolver(inputLines)
         val tile = jigsaw.tiles.entries.first().value
         tile.print()
-        val top = tile.getData().keys.filter { it.y == 0 }.map { it.x }
+        val top = tile.getDataPoints().keys.filter { it.y == 0 }.map { it.x }
         println("\nRotate 1")
         val rotate1 = Transformation.apply(tile, Transformation.ROTATE_1, 10, 10).also { it.print() }
-        val right = rotate1.getData().keys.filter { it.x == 9 }.map { it.y }
+        val right = rotate1.getDataPoints().keys.filter { it.x == 9 }.map { it.y }
         assertThat(right).isEqualTo(top)
         println("\nRotate 2")
         val rotate2 = Transformation.apply(tile, Transformation.ROTATE_2, 10, 10).also { it.print() }
-        val bottom = rotate2.getData().keys.filter { it.y == 9 }.map { it.x }
+        val bottom = rotate2.getDataPoints().keys.filter { it.y == 9 }.map { it.x }
         assertThat(bottom.map{ 9-it }).isEqualTo(top)
         println("\nRotate 2")
         val rotate3 = Transformation.apply(tile, Transformation.ROTATE_3, 10, 10).also { it.print() }
-        val left = rotate3.getData().keys.filter { it.x == 0 }.map { it.y }
+        val left = rotate3.getDataPoints().keys.filter { it.x == 0 }.map { it.y }
         assertThat(left.map { 9-it }).isEqualTo(top)
     }
 
