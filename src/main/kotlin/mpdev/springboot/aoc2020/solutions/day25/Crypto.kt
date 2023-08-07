@@ -11,11 +11,8 @@ class Crypto(input: List<String>) {
     val clientPublicKey = input[0].toLong()
     val serverPublicKey = input[1].toLong()
 
-    fun createKey(subjectNumber: Long, loopSize: Long): Long {
-        var result = INITIAL_VALUE
-        (1L .. loopSize).forEach { result = transformNumber(result, subjectNumber) }
-        return result
-    }
+    fun createKey(subjectNumber: Long, loopSize: Long) =
+        (1L .. loopSize).fold(INITIAL_VALUE) { acc, _ -> transformNumber(acc, subjectNumber) }
 
     fun getLoopSize(key: Long): Long {
         var loopSize = 0L
@@ -27,7 +24,5 @@ class Crypto(input: List<String>) {
         return loopSize
     }
 
-    private fun transformNumber(number: Long, subjectNumber: Long): Long {
-        return (number * subjectNumber) % DIVIDER
-    }
+    private fun transformNumber(number: Long, subjectNumber: Long) = (number * subjectNumber) % DIVIDER
 }
